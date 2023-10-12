@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,6 +20,9 @@ public class FileMapperService {
         dto.setCreationDate(entity.getCreationDate());
         dto.setSharedState(entity.getSharedState());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
+        if(entity.getSharedWith() != null)
+            dto.setSharedWithUsers(entity.getSharedWith().stream().map(x -> x.getSharedWith().getId()).toList());
+        else dto.setSharedWithUsers(new ArrayList<>());
         return dto;
     }
 
@@ -32,15 +36,27 @@ public class FileMapperService {
 
     public DirectoryDto mapDirectoryEntityToDto(DirectoryEntity entity){
         var dto = new DirectoryDto();
-        dto.setFiles(entity.getFiles().stream().map(FileEntity::getId).toList());
-        dto.setOwnerId(entity.getOwner().getId());
-        dto.setParentDirectoryId(entity.getParentDirectory().getId());
-        dto.setSubdirectories(entity.getSubdirectories().stream().map(DirectoryEntity::getId).toList());
+        if(entity.getFiles() != null)
+            dto.setFiles(entity.getFiles().stream().map(FileEntity::getId).toList());
+        else dto.setFiles(new ArrayList<>());
+        if(entity.getOwner()!=null)
+            dto.setOwnerId(entity.getOwner().getId());
+        else dto.setOwnerId(null);
+        if(entity.getParentDirectory() != null)
+            dto.setParentDirectoryId(entity.getParentDirectory().getId());
+        else dto.setParentDirectoryId(null);
+        if(entity.getSubdirectories() != null)
+            dto.setSubdirectories(entity.getSubdirectories().stream().map(DirectoryEntity::getId).toList());
+        else dto.setSubdirectories(new ArrayList<>());
         dto.setName(entity.getName());
         dto.setId(entity.getId());
         dto.setCreationDate(entity.getCreationDate());
         dto.setSharedState(entity.getSharedState());
         dto.setLastModifiedDate(entity.getLastModifiedDate());
+        if(entity.getSharedWith()!=null)
+            dto.setSharedWithUsers(entity.getSharedWith().stream().map(x -> x.getSharedWith().getId()).toList());
+        else dto.setSharedWithUsers(new ArrayList<>());
+
         return dto;
     }
 

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadRequest {
-    private Long uploadDirectoryId;
-    private Long userId;
+public class SpaceUsageResponse {
+    private double spaceUsedGb;
+    private double spaceAvailableGb;
+    private double totalSpaceGb;
 }

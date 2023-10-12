@@ -21,4 +21,5 @@ public class DirectoryDto {
     private List<Long> subdirectories;
     private Long parentDirectoryId;
     private Long ownerId;
+    private List<Long> sharedWithUsers;
 }

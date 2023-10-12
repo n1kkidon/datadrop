@@ -1,20 +1,14 @@
 package com.web.datadropapi.Models;
 
-import com.web.datadropapi.Enums.UserState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class AccountUpdateResponse {
     private Long id;
-    private String name;
-    private LocalDate creationDate;
     private String email;
-    private UserState state;
+    private String username;
 }

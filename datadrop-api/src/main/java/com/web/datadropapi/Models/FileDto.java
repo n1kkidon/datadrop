@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,5 @@ public class FileDto {
     private LocalDate creationDate;
     private LocalDate lastModifiedDate;
     private SharedState sharedState;
+    private List<Long> sharedWithUsers;
 }

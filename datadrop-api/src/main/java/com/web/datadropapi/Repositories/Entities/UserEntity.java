@@ -1,5 +1,7 @@
 package com.web.datadropapi.Repositories.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.web.datadropapi.Enums.*;
 import com.web.datadropapi.Models.UserDto;
 import jakarta.persistence.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "directories")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +48,10 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<DirectoryEntity> directories;
+
+    @OneToMany(mappedBy = "sharedWith", cascade = CascadeType.REMOVE)
+    private List<SharedFileEntity> sharedFilesWithUser;
+    @OneToMany(mappedBy = "sharedWith", cascade = CascadeType.REMOVE)
+    private List<SharedDirectoryEntity> sharedDirectoriesWithUser;
+
 }

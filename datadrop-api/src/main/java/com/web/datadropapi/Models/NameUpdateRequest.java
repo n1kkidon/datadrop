@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadRequest {
-    private Long uploadDirectoryId;
-    private Long userId;
+public class NameUpdateRequest {
+    private String newName;
+    private Long itemId;
 }
