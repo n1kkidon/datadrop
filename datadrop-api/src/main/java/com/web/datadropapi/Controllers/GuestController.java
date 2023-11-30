@@ -5,12 +5,15 @@ import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Enums.UserRole;
 import com.web.datadropapi.Enums.UserState;
 import com.web.datadropapi.Models.Requests.LoginRequest;
+import com.web.datadropapi.Models.Requests.RefreshTokenRequest;
 import com.web.datadropapi.Models.Requests.RegistrationRequest;
 import com.web.datadropapi.Models.Responses.AuthenticationResponse;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.Entities.UserEntity;
 import com.web.datadropapi.Repositories.UserRepository;
+import com.web.datadropapi.Services.UserService;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,7 @@ public class GuestController {
     public final AuthenticationManager authenticationManager;
     public final UserRepository userRepository;
     public final PasswordEncoder passwordEncoder;
+    public final UserService userService;
     @PostMapping("/register") //unauthorized
     public ResponseEntity<Void> registerNewUser(@Valid @RequestBody RegistrationRequest request){
         var opt = userRepository.findByName(request.getUsername());
@@ -70,6 +74,21 @@ public class GuestController {
 
         var user = opt.get();
         var jwtToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
+        var refreshToken = jwtService.generateRefreshToken(user.getId());
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken));
+    }
+
+    @PostMapping("/re-login")
+    public ResponseEntity<AuthenticationResponse> reLogin(@Valid @RequestBody RefreshTokenRequest request){
+        if(!jwtService.isRefreshTokenValid(request.getRefreshToken())){
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        var userId = jwtService.extractClaim(request.getRefreshToken(), Claims::getId);
+        var user = userService.getUserById(Long.parseLong(userId));
+
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user.getId());
+        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken));
     }
 }
