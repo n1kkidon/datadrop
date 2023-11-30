@@ -2,6 +2,7 @@ package com.web.datadropapi.Controllers;
 
 import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Handler.Exception.DuplicateDataException;
+import com.web.datadropapi.Handler.Exception.UserNotAuthenticatedException;
 import com.web.datadropapi.Mappers.FileMapperService;
 import com.web.datadropapi.Mappers.UserMapperService;
 import com.web.datadropapi.Models.*;
@@ -99,27 +100,37 @@ public class FileController {
         return new ResponseEntity<>(fileMapperService.mapFileEntityToDto(file), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/info")
+    @GetMapping("/download/{id}/info")
     public ResponseEntity<FileDto> getFileInfoById(@PathVariable("id") Long id){
-        var file = fileService.getUserAccessibleFileById(id);
+        FileEntity file;
+        try {
+            file = fileService.getUserAccessibleFileById(id);
+        }
+        catch(UserNotAuthenticatedException ex){
+            file = fileService.getFileById(id);
+            if(!file.getSharedState().equals(SharedState.PUBLIC)){
+                throw new SecurityException();
+            }
+        }
         return new ResponseEntity<>(fileMapperService.mapFileEntityToDto(file), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadFileById(@PathVariable("id") Long id) throws MalformedURLException {
-        var file = fileService.getUserAccessibleFileById(id);
-
-        var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
-        if(resource.exists()){
-            if(resource.isReadable()){
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
-                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                        .body(resource);
-            }
-            else throw new SecurityException("Could not access the file in the server"); //not sufficient permissions in the server OS
+        FileEntity file;
+        try {
+            file = fileService.getUserAccessibleFileById(id);
         }
-        else throw new NoSuchElementException("Could not find the file in the server");
+        catch(UserNotAuthenticatedException ex){
+            file = fileService.getFileById(id);
+            if(!file.getSharedState().equals(SharedState.PUBLIC)){
+                throw new SecurityException();
+            }
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileService.getFile(file));
     }
 
     @DeleteMapping("/{id}")

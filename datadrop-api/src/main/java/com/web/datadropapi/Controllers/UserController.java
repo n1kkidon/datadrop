@@ -4,6 +4,7 @@ import com.web.datadropapi.Config.JwtService;
 import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Enums.UserRole;
 import com.web.datadropapi.Enums.UserState;
+import com.web.datadropapi.Handler.Exception.DuplicateDataException;
 import com.web.datadropapi.Mappers.FileMapperService;
 import com.web.datadropapi.Mappers.UserMapperService;
 import com.web.datadropapi.Models.DirectoryDto;
@@ -42,60 +43,14 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private DirectoryRepository directoryRepository;
     @Autowired
     private UserMapperService userMapperService;
     @Autowired
     private FileMapperService fileMapperService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private JwtService jwtService;
-    @Autowired
     private UserService userService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @PostMapping("/register") //unauthorized
-    public ResponseEntity<Void> registerNewUser(@Valid @RequestBody RegistrationRequest request){
-        var opt = userRepository.findByName(request.getUsername());
-        if(opt.isPresent())
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-
-        var user = new UserEntity();
-        user.setName(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setCreationDate(LocalDate.now());
-        user.setLastModifiedDate(LocalDate.now());
-        user.setRole(UserRole.ROLE_USER);
-        user.setEmail(request.getEmail());
-        user.setState(UserState.ACTIVE);
-        user = userRepository.save(user); //user created, now create root for user
-
-        var directory = new DirectoryEntity();
-        directory.setCreationDate(LocalDate.now());
-        directory.setOwner(user);
-        directory.setSharedState(SharedState.PRIVATE);
-        directory.setLastModifiedDate(LocalDate.now());
-        directoryRepository.save(directory);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-    @PostMapping("/login") //unauthorized
-    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest request){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        var opt = userRepository.findByName(request.getUsername());
-        if(opt.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        var user = opt.get();
-        var jwtToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
-    }
-
 
     @GetMapping("/{id}") //user
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long id){
@@ -121,9 +76,13 @@ public class UserController {
     @PutMapping("/account")
     public ResponseEntity<AccountUpdateResponse> putAccountDetails(@Valid @RequestBody AccountUpdateRequest request){
         var user = userService.getCurrentUser();
-        if(!request.getPassword().equals(user.getPassword()))
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new SecurityException("Incorrect password.");
 
+        var opt = userRepository.findByName(request.getUsername());
+        if(opt.isPresent() && !opt.get().getId().equals(user.getId())){ //username is already taken
+            throw new DuplicateDataException("Username is already taken!");
+        }
         user.setName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setLastModifiedDate(LocalDate.now());

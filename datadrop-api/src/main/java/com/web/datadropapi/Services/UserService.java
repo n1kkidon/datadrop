@@ -1,6 +1,7 @@
 package com.web.datadropapi.Services;
 
 import com.web.datadropapi.Enums.SharedState;
+import com.web.datadropapi.Handler.Exception.UserNotAuthenticatedException;
 import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.*;
@@ -24,6 +25,9 @@ public class UserService {
     public final UserRepository userRepository;
     public final DirectoryRepository directoryRepository;
     public UserEntity getCurrentUser(){
+        if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_ANONYMOUS"))){
+            throw new UserNotAuthenticatedException("no auth context");
+        }
         var userId = ((UserEntity)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         var optUser = userRepository.findById(userId);
         if(optUser.isEmpty())

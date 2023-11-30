@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
-    private static final List<String> LOCAL_APIS = Arrays.asList("/user/login", "/user/register");
+    private static final List<String> LOCAL_APIS = Arrays.asList("/guest/", "/file/download/");
     private static final List<String> ADMIN_ONLY_APIS = Arrays.asList("/admin/");
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)

@@ -7,10 +7,15 @@ import com.web.datadropapi.Mappers.FileMapperService;
 import com.web.datadropapi.Repositories.Entities.FileEntity;
 import com.web.datadropapi.Repositories.FileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.NoSuchElementException;
 
 @Service
@@ -78,6 +83,17 @@ public class FileService {
                 fileRepository.delete(file);
             }
             else throw new SecurityException("Could not access the file in the server"); //not sufficient permissions in the server OS
+        }
+        else throw new NoSuchElementException("Could not find the file in the server");
+    }
+
+    public Resource getFile(FileEntity file) throws MalformedURLException {
+        var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
+        if(resource.exists()){
+            if(resource.isReadable()){
+                return resource;
+            }
+            else throw new SecurityException("Could not access the file in the server");
         }
         else throw new NoSuchElementException("Could not find the file in the server");
     }
