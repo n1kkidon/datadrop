@@ -8,9 +8,6 @@ import com.web.datadropapi.Repositories.Entities.FileEntity;
 import com.web.datadropapi.Repositories.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

@@ -92,7 +92,11 @@ public class DirectoryController {
 
     @GetMapping("/{id}/info")
     public ResponseEntity<DirectoryDto> getDirectoryById(@PathVariable("id") Long id) {
-        var directory = directoryService.getUserAccessibleDirectory(id);
+        DirectoryEntity directory;
+        if (id == 0){
+            directory = userService.getCurrentUserRootDirectory();
+        }
+        else directory = directoryService.getUserAccessibleDirectory(id);
         return new ResponseEntity<>(fileMapperService.mapDirectoryEntityToDto(directory), HttpStatus.OK);
     }
 
