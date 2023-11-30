@@ -1,4 +1,4 @@
-package com.web.datadropapi.Models;
+package com.web.datadropapi.Models.Requests;
 
 import com.web.datadropapi.Enums.SharedState;
 import lombok.AllArgsConstructor;

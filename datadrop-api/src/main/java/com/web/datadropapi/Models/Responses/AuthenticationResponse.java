@@ -1,4 +1,4 @@
-package com.web.datadropapi.Models;
+package com.web.datadropapi.Models.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadRequest {
-    private Long uploadDirectoryId;
-    private Long userId;
+public class AuthenticationResponse {
+    private String token;
 }

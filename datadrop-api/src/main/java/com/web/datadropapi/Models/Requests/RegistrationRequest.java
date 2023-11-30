@@ -1,6 +1,7 @@
-package com.web.datadropapi.Models;
+package com.web.datadropapi.Models.Requests;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,15 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountUpdateRequest {
-    private Long id;
+public class RegistrationRequest {
     @NotBlank
     private String email;
     @NotBlank
     private String username;
     @NotBlank
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-    @NotBlank
-    private String newPassword;
 }
 

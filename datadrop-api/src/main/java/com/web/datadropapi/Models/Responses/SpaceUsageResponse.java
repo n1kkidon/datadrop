@@ -1,4 +1,4 @@
-package com.web.datadropapi.Models;
+package com.web.datadropapi.Models.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

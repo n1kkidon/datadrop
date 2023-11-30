@@ -1,4 +1,4 @@
-package com.web.datadropapi.Models;
+package com.web.datadropapi.Models.Requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

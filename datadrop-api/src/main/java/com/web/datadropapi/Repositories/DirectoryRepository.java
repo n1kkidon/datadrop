@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface DirectoryRepository extends JpaRepository<DirectoryEntity, Long> {
     //@Query(value = "SELECT * FROM directories WHERE owner_user_id = :ownerId AND parent_directory_directory_id = NULL",  nativeQuery = true)
     List<DirectoryEntity> findByOwner_idAndParentDirectory_IdIsNull(Long ownerId);
+    Optional<DirectoryEntity> findByName(String name);
 }

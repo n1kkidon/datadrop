@@ -54,6 +54,7 @@ public class DirectoryEntity {
 
     @ManyToOne
     private UserEntity owner;
+
     @OneToMany(mappedBy = "directory", cascade = CascadeType.REMOVE)
     private List<SharedDirectoryEntity> sharedWith;
 
@@ -68,13 +69,14 @@ public class DirectoryEntity {
         return new UrlResource(path.toUri());
     }
 
+    //Not case-sensitive
     public boolean containsItem(String name){
         boolean fileNameExists = false;
         boolean directoryNameExists = false;
         if(getFiles() != null)
-            fileNameExists = getFiles().stream().anyMatch(x -> x.getName().equals(name));
+            fileNameExists = getFiles().stream().anyMatch(x -> x.getName().equalsIgnoreCase(name));
         if(getSubdirectories() != null)
-            directoryNameExists = getSubdirectories().stream().anyMatch(x -> x.getName().equals(name));
+            directoryNameExists = getSubdirectories().stream().anyMatch(x -> x.getName().equalsIgnoreCase(name));
         return fileNameExists || directoryNameExists;
     }
 
