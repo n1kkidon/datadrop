@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,18 +47,33 @@ public class UserController {
         return ResponseEntity.ok(userMapperService.mapUserEntityToDto(user));
     }
 
+    @GetMapping("/name/{name}") //user
+    public ResponseEntity<UserDto> getUserByName(@PathVariable("name") String name){
+        var user = userService.userRepository.findByName(name);
+        if(user.isEmpty())
+            throw new NoSuchElementException("Requested user was not found.");
+        return ResponseEntity.ok(userMapperService.mapUserEntityToDto(user.get()));
+    }
 
-    @GetMapping("/shared/files")
-    public ResponseEntity<List<FileDto>>getFilesSharedWithCurrentUser(){
+    @GetMapping("/shared/users")
+    public ResponseEntity<List<UserDto>>getUsersAndTheirSharedFilesWithCurrentUser(){
         var user = userService.getCurrentUser();
-        var sharedWith = userService.getFilesSharedWithUser(user);
+        var users = userRepository.findUsersSharingFilesWithUser(user.getId());
+        //var sharedWith = userService.getFilesSharedWithUser(user);
+        return new ResponseEntity<>(userMapperService.mapUserEntitiesToDtos(users), HttpStatus.OK);
+    }
+
+    @GetMapping("/shared/files/{id}")
+    public ResponseEntity<List<FileDto>>getFilesSharedWithCurrentUser(@PathVariable("id") Long id){
+        var user = userService.getCurrentUser();
+        var sharedWith = userService.getFilesSharedWithUser(user, id);
         return new ResponseEntity<>(fileMapperService.mapFileEntitiesToDtos(sharedWith), HttpStatus.OK);
     }
 
-    @GetMapping("/shared/directories")
-    public ResponseEntity<List<DirectoryDto>> getDirectoriesSharedWithUser(){
+    @GetMapping("/shared/directories/{id}")
+    public ResponseEntity<List<DirectoryDto>> getDirectoriesSharedWithUser(@PathVariable("id") Long id){
         var user = userService.getCurrentUser();
-        var sharedWith = userService.getDirectoriesSharedWithUser(user);
+        var sharedWith = userService.getDirectoriesSharedWithUser(user, id);
         return new ResponseEntity<>(fileMapperService.mapDirectoryEntitiesToDtos(sharedWith), HttpStatus.OK);
     }
 

@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +43,17 @@ public class UserService {
         return user.get();
     }
 
-    public List<FileEntity> getFilesSharedWithUser(UserEntity user){
-        return user.getSharedFilesWithUser().stream().map(SharedFileEntity::getDirectory).toList();
+    public List<FileEntity> getFilesSharedWithUser(UserEntity user, Long sharingUserId){
+        return user.getSharedFilesWithUser()
+                .stream().map(SharedFileEntity::getDirectory)
+                .filter(x -> x.getOwner().getId().equals(sharingUserId))
+                .toList();
     }
-    public List<DirectoryEntity> getDirectoriesSharedWithUser(UserEntity user){
-        return user.getSharedDirectoriesWithUser().stream().map(SharedDirectoryEntity::getDirectory).toList();
+    public List<DirectoryEntity> getDirectoriesSharedWithUser(UserEntity user, Long sharingUserId){
+        return user.getSharedDirectoriesWithUser()
+                .stream().map(SharedDirectoryEntity::getDirectory)
+                .filter(x -> x.getOwner().getId().equals(sharingUserId))
+                .toList();
     }
     public List<UserEntity> getUsersFileIsSharedWith(FileEntity file){
         if(file.getSharedState().equals(SharedState.PRIVATE)){
@@ -86,17 +93,23 @@ public class UserService {
             return new SpaceUsageResponse(0, MAX_SPACE, MAX_SPACE);
         }
         else {
-            var path = Path.of(rootDir.get(0).getAbsolutePath());
+            var path = Path.of(rootDir.getFirst().getAbsolutePath());
             path = Paths.get("USER_FILES/" + user.getId(), path.toString());
             var resource = new UrlResource(path.toUri());
             var size = FileUploadUtils.getFolderSize(resource.getFile());
-            double gbSize = (double)size/(1024*1024+1024);
+            double gbSize = (double)size/(1024*1024*1024);
             return new SpaceUsageResponse(gbSize, MAX_SPACE-gbSize, MAX_SPACE);
         }
     }
 
     public DirectoryEntity getCurrentUserRootDirectory(){
         var user = getCurrentUser();
+        var root = directoryRepository.findByOwner_idAndParentDirectory_IdIsNull(user.getId());
+        return root.getFirst();
+    }
+
+    public DirectoryEntity getUserRootDirectoryByUserId(Long userId){
+        var user = getUserById(userId);
         var root = directoryRepository.findByOwner_idAndParentDirectory_IdIsNull(user.getId());
         return root.getFirst();
     }

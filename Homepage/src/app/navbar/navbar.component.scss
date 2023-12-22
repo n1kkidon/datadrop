@@ -1,0 +1,16 @@
+.left-side, .right-side{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    font-family: "Segoe UI", Roboto;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    height: 65px;
+}
+
+.empty-space{
+    margin-bottom: 15px;
+}

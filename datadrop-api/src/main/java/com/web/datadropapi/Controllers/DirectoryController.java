@@ -1,6 +1,5 @@
 package com.web.datadropapi.Controllers;
 
-import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Handler.Exception.DuplicateDataException;
 import com.web.datadropapi.Mappers.FileMapperService;
 import com.web.datadropapi.Mappers.UserMapperService;
@@ -16,6 +15,7 @@ import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.DirectoryService;
 import com.web.datadropapi.Services.UserService;
 import com.web.datadropapi.Utils.FileUploadUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,7 +70,12 @@ public class DirectoryController {
         entity.setName(request.getName());
         entity.setOwner(user);
         entity.setSharedState(request.getSharedState());
-        directoryRepository.save(entity);
+        var directory = directoryRepository.save(entity);
+
+        if(request.getSharedWithUsers()!= null)
+            directoryService.setSharedWithByIds(directory, request.getSharedWithUsers());
+
+
         FileUploadUtils.createFolderIfDoesntExist(entity);
         return new ResponseEntity<>(fileMapperService.mapDirectoryEntityToDto(entity), HttpStatus.OK);
     }
@@ -101,27 +105,16 @@ public class DirectoryController {
     }
 
     @PatchMapping("/share") //TODO: make an option to share every item in the directory recursively
-    public ResponseEntity<Void> changeDirectoryShareState(@RequestBody ShareStateUpdateRequest request){
+    public ResponseEntity<Void> changeDirectoryShareState(@Valid @RequestBody ShareStateUpdateRequest request){
         var directory = directoryService.getUserAccessibleDirectory(request.getItemId());
 
         directory.setSharedState(request.getState());
-        if(request.getState().equals(SharedState.SHARED)){
-            var userIds = request.getUserIds();
-            var sharedWith = directory.getSharedWith();
-            for(var userId : userIds){
-                var user = userRepository.findById(userId);
-                if(user.isEmpty())
-                    throw new NoSuchElementException(String.format("Requested user with id %s was not found.", userId));
-                if(sharedWith.stream().anyMatch(x -> x.getSharedWith().getId().equals(userId)))
-                    throw new DuplicateDataException(String.format("You are already sharing this directory with userId %s", userId));
-                var temp = new SharedDirectoryEntity();
-                temp.setDirectory(directory);
-                temp.setSharedWith(user.get());
-                sharedDirectoryRepository.save(temp);
-            }
-        }
-        else sharedDirectoryRepository.deleteAllInBatch(directory.getSharedWith());
+        if(request.getStopSharingWithUserIds()!=null)
+            directoryService.removeSharingWithUsersByIds(directory, request.getStopSharingWithUserIds());
+        if(request.getShareWithUserIds()!= null)
+            directoryService.setSharedWithByIds(directory, request.getShareWithUserIds()); //this already saves
 
+        directoryRepository.save(directory);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

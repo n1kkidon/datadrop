@@ -17,9 +17,9 @@ public class DirectoryDto {
     private LocalDate creationDate;
     private LocalDate lastModifiedDate;
     private SharedState sharedState;
-    private List<Long> files;
-    private List<Long> subdirectories;
+    private List<FileDto> files;
+    private List<SubdirectoryDto> subdirectories;
     private Long parentDirectoryId;
-    private Long ownerId;
+    private UserDto owner;
     private List<Long> sharedWithUsers;
 }

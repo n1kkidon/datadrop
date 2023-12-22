@@ -22,10 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -73,6 +70,11 @@ public class GuestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         var user = opt.get();
+
+        if(user.getState().equals(UserState.BANNED)){
+            throw new SecurityException("Your account is suspended.");
+        }
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user.getId());
 
@@ -87,8 +89,18 @@ public class GuestController {
         var userId = jwtService.extractClaim(request.getRefreshToken(), Claims::getId);
         var user = userService.getUserById(Long.parseLong(userId));
 
+        if(user.getState().equals(UserState.BANNED)){
+            throw new SecurityException("Your account is suspended.");
+        }
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user.getId());
         return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken));
+    }
+
+    @PostMapping("/username-available")
+    public ResponseEntity<Boolean> checkIfNameAvailable(@RequestBody String username){
+        var opt = userRepository.findByName(username);
+        return ResponseEntity.ok(opt.isEmpty());
     }
 }

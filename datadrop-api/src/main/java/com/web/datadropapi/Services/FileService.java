@@ -4,8 +4,12 @@ import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Enums.UserRole;
 import com.web.datadropapi.Handler.Exception.DuplicateDataException;
 import com.web.datadropapi.Mappers.FileMapperService;
+import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.Entities.FileEntity;
+import com.web.datadropapi.Repositories.Entities.SharedDirectoryEntity;
+import com.web.datadropapi.Repositories.Entities.SharedFileEntity;
 import com.web.datadropapi.Repositories.FileRepository;
+import com.web.datadropapi.Repositories.SharedFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -22,6 +28,7 @@ public class FileService {
     public final FileRepository fileRepository;
     public final UserService userService;
     public final FileMapperService fileMapperService;
+    public final SharedFileRepository sharedFileRepository;
 
     public FileEntity getFileById(Long id){
         var opt = fileRepository.findById(id);
@@ -51,6 +58,8 @@ public class FileService {
 
 
     public FileEntity renameFile(FileEntity file, String newName) throws IOException {
+        if(file.getName().equals(newName))
+            return file;
 
         var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
         if(resource.exists() && resource.isReadable())
@@ -60,6 +69,7 @@ public class FileService {
             }
             if(resource.getFile().renameTo(new File(resource.getFile().getParentFile().getPath()+ "/" + newName))) {
                 file.setName(newName);
+                file.setLastModifiedDate(LocalDate.now());
                 return fileRepository.save(file);
             }
             else throw new SecurityException("Could not rename the requested file.");
@@ -93,5 +103,34 @@ public class FileService {
             else throw new SecurityException("Could not access the file in the server");
         }
         else throw new NoSuchElementException("Could not find the file in the server");
+    }
+
+    public void setSharedWithByIds(FileEntity file, List<Long> userIds){
+        var sharedWith = file.getSharedWith();
+        for(var userId : userIds) {
+            var user = userService.userRepository.findById(userId);
+
+            if (user.isEmpty())
+                throw new NoSuchElementException(String.format("Requested user with id %s was not found.", userId));
+
+            if (sharedWith!= null && sharedWith.stream().anyMatch(x -> x.getSharedWith().getId().equals(userId))){
+                continue;
+                //throw new DuplicateDataException(String.format("You are already sharing this file with userId %s", userId));
+            }
+
+            var temp = new SharedFileEntity();
+            temp.setDirectory(file);
+            temp.setSharedWith(user.get());
+            sharedFileRepository.save(temp);
+        }
+    }
+
+    public void removeSharingWithUsersByIds(FileEntity file, List<Long> userIds){
+        var sharedWith = file.getSharedWith();
+        for(var singleShare: sharedWith){
+            if (userIds.stream().anyMatch(x -> x.equals(singleShare.getSharedWith().getId()))){
+                sharedFileRepository.delete(singleShare);
+            }
+        }
     }
 }

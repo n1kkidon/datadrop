@@ -7,6 +7,7 @@ import com.web.datadropapi.Models.DirectoryDto;
 import com.web.datadropapi.Models.FileDto;
 import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
 import com.web.datadropapi.Models.UserDto;
+import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -51,19 +52,19 @@ public class AdminController {
         return ResponseEntity.ok(usersDto);
     }
 
-    @GetMapping("/shared/files/{id}") //admin
-    public ResponseEntity<List<FileDto>> getFilesSharedWithUser(@PathVariable("id") Long id){
-        var user = userService.getUserById(id);
-        var sharedWith = userService.getFilesSharedWithUser(user);
-        return new ResponseEntity<>(fileMapperService.mapFileEntitiesToDtos(sharedWith), HttpStatus.OK);
-    }
+//    @GetMapping("/shared/files/{id}") //admin
+//    public ResponseEntity<List<FileDto>> getFilesSharedWithUser(@PathVariable("id") Long id){
+//        var user = userService.getUserById(id);
+//        var sharedWith = userService.getFilesSharedWithUser(user, );
+//        return new ResponseEntity<>(fileMapperService.mapFileEntitiesToDtos(sharedWith), HttpStatus.OK);
+//    }
 
-    @GetMapping("/shared/directories/{id}") //admin
-    public ResponseEntity<List<DirectoryDto>> getDirectoriesSharedWithUser(@PathVariable("id") Long id){
-        var user = userService.getUserById(id);
-        var sharedWith = userService.getDirectoriesSharedWithUser(user);
-        return new ResponseEntity<>(fileMapperService.mapDirectoryEntitiesToDtos(sharedWith), HttpStatus.OK);
-    }
+//    @GetMapping("/shared/directories/{id}") //admin
+//    public ResponseEntity<List<DirectoryDto>> getDirectoriesSharedWithUser(@PathVariable("id") Long id){
+//        var user = userService.getUserById(id);
+//        var sharedWith = userService.getDirectoriesSharedWithUser(user);
+//        return new ResponseEntity<>(fileMapperService.mapDirectoryEntitiesToDtos(sharedWith), HttpStatus.OK);
+//    }
 
     @DeleteMapping("/account/{id}") //admin
     public ResponseEntity<Void> deleteUserAccountById(@PathVariable("id") Long id) throws IOException {
@@ -71,5 +72,11 @@ public class AdminController {
         if(userService.deleteUserAccount(user))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         else throw new SecurityException("Could not delete user files.");
+    }
+
+    @GetMapping("/user/{id}/root")
+    public ResponseEntity<DirectoryDto> getUserRootDirectoryByUserId(@PathVariable("id") Long id) {
+        var root = userService.getUserRootDirectoryByUserId(id);
+        return new ResponseEntity<>(fileMapperService.mapDirectoryEntityToDto(root), HttpStatus.OK);
     }
 }

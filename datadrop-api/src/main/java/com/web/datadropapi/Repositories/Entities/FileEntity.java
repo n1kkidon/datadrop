@@ -34,6 +34,12 @@ public class FileEntity {
     @Column(name = "shared_state")
     private SharedState sharedState;
 
+    @Column(name = "mime_type")
+    private String mimeType;
+
+    @ManyToOne
+    private UserEntity owner;
+
     @ManyToOne
     private DirectoryEntity parentDirectory;
 

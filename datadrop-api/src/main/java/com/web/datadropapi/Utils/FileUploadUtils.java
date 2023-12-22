@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 public class FileUploadUtils {
-    public static void saveFileToSystem(DirectoryEntity location, MultipartFile file) throws IOException {
+    public static Path saveFileToSystem(DirectoryEntity location, MultipartFile file) throws IOException {
         var usersFileRoot = "USER_FILES/" + location.getOwner().getId();
         Path path = Paths.get(usersFileRoot, location.getAbsolutePath());
         if(!Files.exists(path))
@@ -22,6 +22,7 @@ public class FileUploadUtils {
         try (InputStream inputStream = file.getInputStream()){
             Path filePath = path.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            return filePath;
         }
         catch (IOException e){
             throw new IOException("Cannot save file: " + file.getOriginalFilename());

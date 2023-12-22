@@ -5,12 +5,16 @@ import com.web.datadropapi.Enums.UserRole;
 import com.web.datadropapi.Handler.Exception.DuplicateDataException;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
+import com.web.datadropapi.Repositories.Entities.SharedDirectoryEntity;
+import com.web.datadropapi.Repositories.SharedDirectoryRepository;
 import com.web.datadropapi.Utils.FileUploadUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,6 +23,7 @@ public class DirectoryService {
 
     public final DirectoryRepository directoryRepository;
     public final UserService userService;
+    public final SharedDirectoryRepository sharedDirectoryRepository;
 
     public DirectoryEntity getDirectoryById(Long id){
         var directory = directoryRepository.findById(id);
@@ -30,6 +35,8 @@ public class DirectoryService {
     public DirectoryEntity renameDirectory(DirectoryEntity dir, String newName) throws IOException {
         var directory = dir.getParentDirectory();
         var resource = directory.getChildItemInSystem(dir.getName());
+        if(dir.getName().equals(newName))
+            return directory;
 
         if(resource.exists() && resource.getFile().isDirectory())
         {
@@ -38,6 +45,7 @@ public class DirectoryService {
             }
             if(resource.getFile().renameTo(new File(resource.getFile().getParentFile().getPath()+ "/" + newName))) {
                 dir.setName(newName);
+                dir.setLastModifiedDate(LocalDate.now());
                 return directoryRepository.save(dir);
             }
             else throw new SecurityException("Could not rename the requested file.");
@@ -78,7 +86,35 @@ public class DirectoryService {
         throw new SecurityException("forbidden");
     }
 
+    public void setSharedWithByIds(DirectoryEntity directory, List<Long> userIds){
+        var sharedWith = directory.getSharedWith();
+        for(var userId : userIds) {
+            var user = userService.userRepository.findById(userId);
 
+            if (user.isEmpty())
+                throw new NoSuchElementException(String.format("Requested user with id %s was not found.", userId));
+
+
+            if (sharedWith!= null && sharedWith.stream().anyMatch(x -> x.getSharedWith().getId().equals(userId))){
+                continue;
+                //throw new DuplicateDataException(String.format("You are already sharing this directory with userId %s", userId));
+            }
+
+            var temp = new SharedDirectoryEntity();
+            temp.setDirectory(directory);
+            temp.setSharedWith(user.get());
+            sharedDirectoryRepository.save(temp);
+        }
+    }
+
+    public void removeSharingWithUsersByIds(DirectoryEntity directory, List<Long> userIds){
+        var sharedWith = directory.getSharedWith();
+        for(var singleShare: sharedWith){
+            if (userIds.stream().anyMatch(x -> x.equals(singleShare.getSharedWith().getId()))){
+                sharedDirectoryRepository.delete(singleShare);
+            }
+        }
+    }
 
 
 

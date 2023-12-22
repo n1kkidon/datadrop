@@ -1,0 +1,18 @@
+.expansion-panel{
+    background-color: rgb(20, 20, 20);
+}
+
+.user-entry, .user-add-form, .icon-name-container{
+    display: flex;
+    flex-direction: row;
+    //align-items: center;
+}
+
+.icon-name-container .per-item-button{
+    margin-left: auto;
+}
+
+.icon-name-container .item{
+    margin: 0;
+    padding-left: 5px;
+}

@@ -1,0 +1,88 @@
+$accent-color: #c2185b;
+$hover-color: #221419;
+$active-color: #3b1e28;
+$secondary-color: #b0bec5;
+
+
+.folder-table, .top-buttons{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.create-button{
+    margin-right: 0.5%;
+}
+
+.title-row:hover{
+    background-color: transparent;
+}
+
+
+.list-item:hover{
+    //border: 1px solid $accent-color;
+    background-color: $hover-color;
+}
+
+
+.list-item, .title-row{
+    border-bottom: 1px solid $accent-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.folder-icon, .file-icon{
+    padding-left: 1%;
+}
+
+.name-part{
+    width: 600px;
+    padding-left: 1%;
+}
+
+.owner-part{
+    width: 300px;
+    padding-left: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.owner-part :first-child{
+    margin-right: 10px;
+}
+.title-row .owner-part{
+    margin-left: 50px;
+}
+
+.shared-part{
+    width: 200px;
+    padding-left: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.list-item:active{
+    background-color: $active-color;
+}
+
+.list-item:focus:before{
+    background-color: transparent;
+}
+
+.create-button{
+    background-color: transparent !important;
+}
+
+.button-group{
+    margin-left: auto;
+}
+
+.per-item-button mat-icon, .create-button mat-icon{
+    margin: 0;
+}
+
+.folder-icon{
+    color: $accent-color;
+}

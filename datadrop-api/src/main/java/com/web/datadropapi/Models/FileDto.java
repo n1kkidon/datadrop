@@ -18,4 +18,7 @@ public class FileDto {
     private LocalDate lastModifiedDate;
     private SharedState sharedState;
     private List<Long> sharedWithUsers;
+    private String mimeType;
+    private Long parentDirectoryId;
+    private UserDto owner;
 }

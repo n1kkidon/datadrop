@@ -29,18 +29,4 @@ public class UserMapperService {
         }
         return userDtos;
     }
-
-    public DirectoryDto mapDirectoryEntityToDto(DirectoryEntity entity){
-        var dto = new DirectoryDto();
-        dto.setLastModifiedDate(entity.getLastModifiedDate());
-        dto.setSharedState(entity.getSharedState());
-        dto.setName(entity.getName());
-        dto.setId(entity.getId());
-        dto.setCreationDate(entity.getCreationDate());
-        dto.setFiles(entity.getFiles().stream().map(FileEntity::getId).toList());
-        dto.setParentDirectoryId(entity.getParentDirectory().getId());
-        dto.setOwnerId(entity.getOwner().getId());
-        dto.setSubdirectories(entity.getSubdirectories().stream().map(DirectoryEntity::getId).toList());
-        return dto;
-    }
 }

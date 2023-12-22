@@ -1,0 +1,19 @@
+.dialog-container{
+    text-align: center;
+    background-color: rgb(20, 20, 20);
+    color: gray;
+    width: 100%;
+    height: 100%;
+    padding: 4% 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.bottom-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

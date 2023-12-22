@@ -1,0 +1,17 @@
+<form class="login" (ngSubmit)="onSubmit(username.value, pass.value)">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput #username>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" #pass>
+        <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+    Dont have an account?<p class="register-link" routerLink="/register">Register</p>
+    <button mat-stroked-button color="primary" type="submit" mat-button>Login</button>
+</form>

@@ -1,6 +1,7 @@
 package com.web.datadropapi.Models;
 
 import com.web.datadropapi.Enums.UserState;
+import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,3 +19,4 @@ public class UserDto {
     private String email;
     private UserState state;
 }
+
