@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://nikkidon.org", "/**"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://datadrop.nikkidon.org", "/**"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT", "PATCH","DELETE"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Authorization", "Cache-Control", "Content-Type"));
