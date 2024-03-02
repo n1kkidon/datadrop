@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
 import { HomepageComponent } from './homepage/homepage.component';
-import { FilepageComponent } from './filepage/filepage.component';
 import { UsersComponent } from './users/users.component';
 import { RegisterFormComponent } from './register-form/register-form.component';
 

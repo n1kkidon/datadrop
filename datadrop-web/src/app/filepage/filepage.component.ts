@@ -4,7 +4,7 @@ import { FileInfo } from '../models/FileInfo';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '../services/file.service';
 import { HttpResponse } from '@angular/common/http';
-import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserDto } from '../models/UserDto';
@@ -19,12 +19,12 @@ export class FilepageComponent implements OnInit{
 
   constructor(private route: ActivatedRoute, private fileService: FileService, private router: Router, private sanitizer: DomSanitizer,
     private dialogRef: MatDialogRef<FilepageComponent>, @Inject(MAT_DIALOG_DATA) public fileInfo: FileInfo | DirectoryInfo){
-      
+
     }
 
   isFile = (this.fileInfo as FileInfo).mimeType ? true:false;
   imgurl!: string | ArrayBuffer | null;
-  fileType!: string; 
+  fileType!: string;
   sharedUsers!: string[];
 
   async ngOnInit() {
