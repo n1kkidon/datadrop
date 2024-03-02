@@ -13,6 +13,9 @@ import { MaterialModule } from './shared/modules/material/material.module';
 import { ComponentsModule } from './shared/components/components.module';
 import { AdminModule } from './admin/admin.module';
 import { FilesModule } from './files/files.module';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './app-state';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +32,10 @@ import { FilesModule } from './files/files.module';
     ComponentsModule,
     FilesModule,
     AppRoutingModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers
+    }),
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {
