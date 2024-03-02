@@ -1,0 +1,151 @@
+<div class="top-buttons">
+  <button
+    class="create-button"
+    mat-stroked-button
+    color="primary"
+    (click)="openEditFormDialog()"
+    matTooltip="Create new directory"
+    aria-label="Create new directory"
+  >
+    <mat-icon>create_new_folder</mat-icon>
+  </button>
+
+  <button
+    class="create-button"
+    mat-stroked-button
+    color="primary"
+    (click)="openFileUploadDialog()"
+    matTooltip="Upload file"
+    aria-label="Upload file"
+  >
+    <mat-icon>cloud_upload</mat-icon>
+  </button>
+</div>
+
+<div class="folder-table">
+  <div class="title-row">
+    <div class="name-part">
+      <div>Name</div>
+    </div>
+
+    <div class="owner-part">
+      <div>Owner</div>
+    </div>
+
+    <div class="shared-part">
+      <div>Sharing</div>
+    </div>
+  </div>
+
+  <div
+    class="list-item"
+    *ngFor="let folder of currentDir.subdirectories"
+    (click)="doubleClickNavigate(folder.id)"
+  >
+    <mat-icon class="folder-icon">folder</mat-icon>
+
+    <div class="name-part">
+      <div matListItemTitle>{{ folder.name }}</div>
+      <div matListItemLine>{{ folder.lastModifiedDate | date }}</div>
+    </div>
+
+    <div class="owner-part">
+      <mat-icon>person</mat-icon>
+      <div>{{ folder.owner.name }}</div>
+    </div>
+
+    <div class="shared-part">
+      <div>{{ folder.sharedState }}</div>
+    </div>
+    <div class="button-group">
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="openEditFormDialog(folder)"
+        matTooltip="edit directory"
+        aria-label="edit directory"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="deleteFile(folder)"
+        matTooltip="delete directory"
+        aria-label="delete directory"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="openFileInfoDialog(folder)"
+        matTooltip="more info"
+        aria-label="more info"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="list-item"
+    *ngFor="let note of currentDir.files"
+    (click)="doubleClickFileDialog(note)"
+  >
+    <div class="file-icon">
+      <mat-icon>insert_drive_file</mat-icon>
+    </div>
+    <div class="name-part">
+      <div matListItemTitle>{{ note.name }}</div>
+      <div matListItemLine>{{ note.lastModifiedDate | date }}</div>
+    </div>
+
+    <div class="owner-part">
+      <mat-icon>person</mat-icon>
+      <div>{{ note.owner.name }}</div>
+    </div>
+
+    <div class="shared-part">
+      <div>{{ note.sharedState }}</div>
+    </div>
+
+    <div class="button-group">
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="openEditFormDialog(note)"
+        matTooltip="edit file"
+        aria-label="edit file"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="deleteFile(note)"
+        matTooltip="delete file"
+        aria-label="delete file"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+
+      <button
+        class="per-item-button"
+        mat-icon-button
+        color="accent"
+        (click)="openFileInfoDialog(note)"
+        matTooltip="more info"
+        aria-label="more info"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

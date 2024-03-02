@@ -1,0 +1,43 @@
+<form
+  [formGroup]="directoryForm"
+  (ngSubmit)="submitForm()"
+  class="directory-form"
+>
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="itemName" type="text" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Sharing</mat-label>
+    <mat-select formControlName="sharedState" required>
+      <mat-option
+        *ngFor="let sharedState of sharedStates"
+        [value]="sharedState"
+        >{{ sharedState }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <app-sharelist
+    [itemInfo]="this.data.editing"
+    (userRemoved)="removeUserFromUpdateRequest($event)"
+    (userAdded)="addUserToUpdateRequest($event)"
+  >
+  </app-sharelist>
+
+  <div mat-dialog-actions class="form-actions">
+    <button mat-stroked-button type="button" (click)="onCancelClick()">
+      Cancel
+    </button>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      type="submit"
+      [disabled]="directoryForm.invalid"
+    >
+      Save
+    </button>
+  </div>
+</form>

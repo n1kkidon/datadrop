@@ -1,0 +1,12 @@
+.mdc-list-item__secondary-text {
+  font-family: var(--mdc-list-list-item-label-text-font) !important;
+  line-height: var(--mdc-list-list-item-label-text-line-height) !important;
+  font-size: var(--mdc-list-list-item-label-text-size) !important;
+  font-weight: var(--mdc-list-list-item-label-text-weight) !important;
+  letter-spacing: var(--mdc-list-list-item-label-text-tracking) !important;
+  color: var(--mdc-list-list-item-label-text-color) !important;
+}
+
+.mdc-list-item__secondary-text::before {
+  display: none !important;
+}

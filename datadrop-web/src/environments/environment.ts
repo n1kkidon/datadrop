@@ -1,3 +1,3 @@
 export const environment = {
-    backendUrl: "/api/v1"
+  backendUrl: '/api/v1',
 };

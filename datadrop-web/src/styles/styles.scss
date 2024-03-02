@@ -1,0 +1,69 @@
+@use "global/components";
+
+html {
+  --mdc-list-list-item-label-text-font: "Segoe UI", Roboto, "Helvetica Neue",
+    sans-serif;
+  --mdc-list-list-item-label-text-line-height: 20px;
+  --mdc-list-list-item-label-text-size: 14px;
+  --mdc-list-list-item-label-text-weight: 400;
+  --mdc-list-list-item-label-text-tracking: 0.0178571429em;
+}
+
+html,
+body {
+  background-color: rgb(20, 20, 20);
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+.mat-typography {
+  font:
+    400 14px/20px "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    sans-serif !important;
+}
+
+.filepage-dialog {
+  width: 30%;
+  height: 60%;
+}
+.editform-dialog {
+  width: 20%;
+  height: 60%;
+}
+
+.confirm-dialog {
+  width: 15%;
+  height: 20%;
+}
+
+.fileupload-dialog {
+  width: 20%;
+  height: 30%;
+}
+
+@media only screen and (max-width: 767px) {
+  .filepage-dialog {
+    width: 70%;
+    height: 60%;
+  }
+  .editform-dialog {
+    width: 70%;
+    height: 60%;
+  }
+
+  .confirm-dialog {
+    width: 60%;
+    height: 30%;
+  }
+
+  .fileupload-dialog {
+    width: 60%;
+    height: 50%;
+  }
+}

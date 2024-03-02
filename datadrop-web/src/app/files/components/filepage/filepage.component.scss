@@ -1,0 +1,47 @@
+.file-container {
+  text-align: center;
+  background-color: rgb(20, 20, 20);
+  color: gray;
+  width: 100%;
+  height: 100%;
+  padding: 4% 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.file-info {
+  text-align: left;
+  margin-left: 4%;
+  margin-right: 4%;
+  margin-bottom: auto;
+}
+.file-info-title {
+  color: rgb(86, 86, 86);
+  font-size: 1em;
+  margin-bottom: 0px;
+}
+.file-info-data {
+  color: grey;
+  font-size: 1.3em;
+  margin-top: 0px;
+}
+
+.bottom-buttons {
+  margin-top: auto;
+}
+
+.bottom-buttons button {
+  margin: 4px;
+}
+.bottom-buttons button mat-icon {
+  margin: 0;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
