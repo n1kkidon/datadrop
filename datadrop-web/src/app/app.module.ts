@@ -16,6 +16,7 @@ import { FilesModule } from './files/files.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './app-state';
 import { EffectsModule } from '@ngrx/effects';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { EffectsModule } from '@ngrx/effects';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    CoreModule,
     UserModule,
     AdminModule,
     ComponentsModule,

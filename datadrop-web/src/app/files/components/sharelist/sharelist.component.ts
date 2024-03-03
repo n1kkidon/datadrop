@@ -81,7 +81,7 @@ export class SharelistComponent implements OnInit {
       );
       if (user.ok) {
         this.userAdded.emit(user.body!);
-        this.users.push(user.body!); //TODO: add validation to not be able to add users that are already added
+        this.users.push(user.body!); //TODO: add validation to not be able to add users-table that are already added
       }
     } else {
       this.utilsService.openSnackBar('Username not found!', 'OK');
