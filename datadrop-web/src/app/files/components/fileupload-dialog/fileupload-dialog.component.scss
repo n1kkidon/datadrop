@@ -1,7 +1,9 @@
+@use "src/styles/global/functions" as f;
+
 .dialog-container {
   text-align: center;
-  background-color: rgb(20, 20, 20);
-  color: gray;
+  background-color: f.color(bg-color);
+  color: f.color(secondary-color);
   width: 100%;
   height: 100%;
   padding: 4% 0;

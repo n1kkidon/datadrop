@@ -1,0 +1,9 @@
+@use "colors" as color;
+
+@function color($color-name) {
+  @if not map-has-key(color.$colors, $color-name) {
+    @error 'There is no color named `#{$color-name}` in $colors. '
+         + 'Color should be one of #{map-keys(color.$colors)}.';
+  }
+  @return map-get(color.$colors, $color-name);
+}

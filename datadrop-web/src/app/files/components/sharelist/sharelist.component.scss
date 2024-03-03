@@ -1,5 +1,7 @@
+@use "src/styles/global/functions" as f;
+
 .expansion-panel {
-  background-color: rgb(20, 20, 20);
+  background-color: f.color(bg-color);
 }
 
 .user-entry,

@@ -1,13 +1,10 @@
-$accent-color: #c2185b;
-$hover-color: #221419;
-$active-color: #3b1e28;
-$secondary-color: #b0bec5;
+@use "src/styles/global/functions" as f;
 
 .sidenav {
   height: 100%;
   width: 15%;
   padding-top: 5%;
-  background-color: rgb(20, 20, 20);
+  background-color: f.color(bg-color);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -33,7 +30,7 @@ $secondary-color: #b0bec5;
 .sidenav-container {
   height: 100%;
   width: 100%;
-  background-color: rgb(20, 20, 20);
+  background-color: f.color(bg-color);
 }
 
 .sidenav-title {
@@ -53,5 +50,5 @@ $secondary-color: #b0bec5;
   margin-left: 5px;
 }
 .sidenav-entry:hover {
-  background-color: $hover-color;
+  background-color: f.color(hover-color);
 }

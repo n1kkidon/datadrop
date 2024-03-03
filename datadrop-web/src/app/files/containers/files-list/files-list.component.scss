@@ -1,7 +1,4 @@
-$accent-color: #c2185b;
-$hover-color: #221419;
-$active-color: #3b1e28;
-$secondary-color: #b0bec5;
+@use "src/styles/global/functions" as f;
 
 .folder-table,
 .top-buttons {
@@ -17,13 +14,12 @@ $secondary-color: #b0bec5;
 }
 
 .list-item:hover {
-  //border: 1px solid $accent-color;
-  background-color: $hover-color;
+  background-color: f.color(hover-color);
 }
 
 .list-item,
 .title-row {
-  border-bottom: 1px solid $accent-color;
+  border-bottom: 1px solid f.color(accent-color);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -64,7 +60,7 @@ $secondary-color: #b0bec5;
 }
 
 .list-item:active {
-  background-color: $active-color;
+  background-color: f.color(active-color);
 }
 
 .list-item:focus:before {
@@ -85,5 +81,5 @@ $secondary-color: #b0bec5;
 }
 
 .folder-icon {
-  color: $accent-color;
+  color: f.color(accent-color);
 }

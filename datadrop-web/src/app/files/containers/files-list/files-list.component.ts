@@ -13,11 +13,11 @@ import { AdminService } from '../../../admin/services/admin.service';
 import { UserService } from '../../../user/services/user.service';
 
 @Component({
-  selector: 'app-homepage',
-  templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.scss'],
+  selector: 'app-files-list',
+  templateUrl: './files-list.component.html',
+  styleUrls: ['./files-list.component.scss'],
 })
-export class HomepageComponent implements OnInit {
+export class FilesListComponent implements OnInit {
   constructor(
     private directoryService: DirectoryService,
     private fileService: FileService,

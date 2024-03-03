@@ -5,7 +5,7 @@ import { FilesRoutingModule } from './files-routing.module';
 import { FilesComponent } from './files.component';
 import { MaterialModule } from '../shared/modules/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HomepageComponent } from './containers/homepage/homepage.component';
+import { FilesListComponent } from './containers/files-list/files-list.component';
 import { SharelistComponent } from './components/sharelist/sharelist.component';
 import { FileuploadDialogComponent } from './components/fileupload-dialog/fileupload-dialog.component';
 import { EditFormDialogComponent } from './components/editform-dialog/editform-dialog.component';
@@ -15,7 +15,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 @NgModule({
   declarations: [
     FilesComponent,
-    HomepageComponent,
+    FilesListComponent,
     SharelistComponent,
     FileuploadDialogComponent,
     EditFormDialogComponent,

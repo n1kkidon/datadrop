@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from './containers/users/users.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
-import { HomepageComponent } from '../files/containers/homepage/homepage.component';
+import { FilesListComponent } from '../files/containers/files-list/files-list.component';
 
 const routes: Routes = [
   {
@@ -18,7 +18,7 @@ const routes: Routes = [
 
   {
     path: 'users/:userId',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
@@ -29,7 +29,7 @@ const routes: Routes = [
 
   {
     path: 'users/:userId/:id',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {

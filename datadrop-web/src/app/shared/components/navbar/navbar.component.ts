@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HomepageComponent } from '../../../files/containers/homepage/homepage.component';
+import { FilesListComponent } from '../../../files/containers/files-list/files-list.component';
 import { Router } from '@angular/router';
 import { UserService } from '../../../user/services/user.service';
 import { UtilsService } from '../../services/utils.service';

@@ -1,7 +1,9 @@
+@use "src/styles/global/functions" as f;
+
 .file-container {
   text-align: center;
-  background-color: rgb(20, 20, 20);
-  color: gray;
+  background-color: f.color(bg-color);
+  color: f.color(text-color);
   width: 100%;
   height: 100%;
   padding: 4% 0;
@@ -19,14 +21,14 @@
   margin-bottom: auto;
 }
 .file-info-title {
-  color: rgb(86, 86, 86);
+  color: f.color(secondary-color);
   font-size: 1em;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 .file-info-data {
-  color: grey;
+  color: f.color(text-color);
   font-size: 1.3em;
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .bottom-buttons {

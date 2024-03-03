@@ -33,7 +33,7 @@ import { EffectsModule } from '@ngrx/effects';
     FilesModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, {
-      metaReducers
+      metaReducers,
     }),
     EffectsModule.forRoot([]),
   ],

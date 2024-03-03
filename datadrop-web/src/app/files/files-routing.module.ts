@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomepageComponent } from './containers/homepage/homepage.component';
+import { FilesListComponent } from './containers/files-list/files-list.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
 
 const routes: Routes = [
   {
     path: 'home',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
         only: ['GUEST', 'ROLE_USER', 'ROLE_ADMIN'],
       },
     },
-    children: [{ path: '', component: HomepageComponent, pathMatch: 'full' }],
+    children: [{ path: '', component: FilesListComponent, pathMatch: 'full' }],
   },
 
   {
     path: 'home/:id',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
@@ -29,7 +29,7 @@ const routes: Routes = [
 
   {
     path: 'shared/:shareUserId',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {
@@ -40,7 +40,7 @@ const routes: Routes = [
 
   {
     path: 'shared/:shareUserId/:id',
-    component: HomepageComponent,
+    component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
       permissions: {

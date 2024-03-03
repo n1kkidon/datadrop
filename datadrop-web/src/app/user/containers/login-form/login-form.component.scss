@@ -1,4 +1,4 @@
-$accent-color: #c2185b;
+@use "src/styles/global/functions" as f;
 
 .login {
   display: flex;
@@ -10,7 +10,7 @@ mat-form-field {
 }
 
 .register-link {
-  color: $accent-color;
+  color: f.color(accent-color);
 }
 
 .register-link:hover {
