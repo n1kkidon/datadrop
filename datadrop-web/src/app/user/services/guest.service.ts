@@ -4,9 +4,9 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of } from 'rxjs';
-import { LoginResponse } from '../../shared/models/LoginResponse';
-import { UtilsService } from '../../shared/services/utils.service';
+import { Observable } from 'rxjs';
+import { AuthenticationModel } from '../../shared/models/AuthenticationModel';
+import { LoginRequest } from '../../shared/models/request/LoginRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -14,13 +14,10 @@ import { UtilsService } from '../../shared/services/utils.service';
 export class GuestService {
   constructor(private httpClient: HttpClient) {}
 
-  login(
-    username: string,
-    password: string,
-  ): Observable<HttpResponse<LoginResponse> | HttpErrorResponse> {
-    return this.httpClient.post<LoginResponse>(
+  login(credentials: LoginRequest) {
+    return this.httpClient.post<AuthenticationModel>(
       '/guest/login',
-      { username, password },
+      credentials,
       { observe: 'response', responseType: 'json' },
     );
   }

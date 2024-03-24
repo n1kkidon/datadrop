@@ -20,6 +20,5 @@ export class AppComponent {
       let token: Token = jwtDecode(perms);
       this.permissionsService.loadPermissions([token.roles[0].authority]);
     }
-    console.log(this.permissionsService.getPermissions());
   }
 }

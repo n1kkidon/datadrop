@@ -18,7 +18,7 @@ import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.DirectoryService;
 import com.web.datadropapi.Services.FileService;
 import com.web.datadropapi.Services.UserService;
-import com.web.datadropapi.Utils.FileUploadUtils;
+import com.web.datadropapi.Utils.FileSystemUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +65,9 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private FileSystemUtils fileSystemUtils;
+
     @PostMapping("/upload")
     public ResponseEntity<FileDto> uploadFile(@Param("file") MultipartFile file, UploadRequest request) throws IOException {
         if(file == null)
@@ -87,7 +90,7 @@ public class FileController {
         entity.setParentDirectory(directory);
         entity.setLastModifiedDate(LocalDate.now());
 
-        var path = FileUploadUtils.saveFileToSystem(directory, file);
+        var path = fileSystemUtils.saveFileToSystem(directory, file);
         var mimeType = Files.probeContentType(path);
         entity.setMimeType(mimeType);
         fileRepository.save(entity);

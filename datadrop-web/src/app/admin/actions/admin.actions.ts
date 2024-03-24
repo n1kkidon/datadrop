@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { UserDto } from '../../shared/models/UserDto';
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
 
 export const changeUserAccountBlockState = createAction(
   '[Admin] Change Account Block State',
@@ -26,5 +26,5 @@ export const loadUserRootDirectory = createAction(
 
 export const userRootDirectoryLoaded = createAction(
   '[Admin] User Root Directory Loaded',
-  props<{ data: DirectoryInfo }>(),
+  props<{ data: DirectoryDto }>(),
 );

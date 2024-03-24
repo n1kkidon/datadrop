@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserDto } from '../../shared/models/UserDto';
-import { SpaceUsageResponse } from '../../shared/models/SpaceUsageResponse';
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
-import { FileInfo } from '../../shared/models/FileInfo';
+import { SpaceUsageResponse } from '../../shared/models/response/SpaceUsageResponse';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
+import { FileDto } from '../../shared/models/FileDto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class AdminService {
   }
 
   getUserRootDirectoryByUserId(id: number) {
-    return this.httpClient.get<DirectoryInfo>('/admin/user/' + id + '/root', {
+    return this.httpClient.get<DirectoryDto>('/admin/user/' + id + '/root', {
       observe: 'response',
       responseType: 'json',
     });

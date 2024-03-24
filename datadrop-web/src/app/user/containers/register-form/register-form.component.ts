@@ -9,7 +9,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { DirectoryInfo } from '../../../shared/models/DirectoryInfo';
+import { DirectoryDto } from '../../../shared/models/DirectoryDto';
 import {
   Observable,
   debounceTime,

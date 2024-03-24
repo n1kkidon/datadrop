@@ -28,11 +28,11 @@ body {
     sans-serif !important;
 }
 
-.filepage-dialog {
+.file-page-dialog {
   width: 30%;
   height: 60%;
 }
-.editform-dialog {
+.edit-form-dialog {
   width: 20%;
   height: 60%;
 }
@@ -42,17 +42,17 @@ body {
   height: 20%;
 }
 
-.fileupload-dialog {
+.file-upload-dialog {
   width: 20%;
   height: 30%;
 }
 
 @media only screen and (max-width: 767px) {
-  .filepage-dialog {
+  .file-page-dialog {
     width: 70%;
     height: 60%;
   }
-  .editform-dialog {
+  .edit-form-dialog {
     width: 70%;
     height: 60%;
   }
@@ -62,7 +62,7 @@ body {
     height: 30%;
   }
 
-  .fileupload-dialog {
+  .file-upload-dialog {
     width: 60%;
     height: 50%;
   }

@@ -4,10 +4,11 @@ import com.web.datadropapi.Config.JwtService;
 import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Enums.UserRole;
 import com.web.datadropapi.Enums.UserState;
+import com.web.datadropapi.Handler.Exception.SessionExpiredException;
 import com.web.datadropapi.Models.Requests.LoginRequest;
 import com.web.datadropapi.Models.Requests.RefreshTokenRequest;
 import com.web.datadropapi.Models.Requests.RegistrationRequest;
-import com.web.datadropapi.Models.Responses.AuthenticationResponse;
+import com.web.datadropapi.Models.AuthenticationModel;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.Entities.UserEntity;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,11 +65,11 @@ public class GuestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping("/login") //unauthorized
-    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<AuthenticationModel> login(@Valid @RequestBody LoginRequest request){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var opt = userRepository.findByName(request.getUsername());
         if(opt.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NoSuchElementException("User with provided credentials not found.");
 
         var user = opt.get();
 
@@ -78,13 +80,13 @@ public class GuestController {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user.getId());
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken));
+        return ResponseEntity.ok(new AuthenticationModel(jwtToken, refreshToken));
     }
 
     @PostMapping("/re-login")
-    public ResponseEntity<AuthenticationResponse> reLogin(@Valid @RequestBody RefreshTokenRequest request){
+    public ResponseEntity<AuthenticationModel> reLogin(@Valid @RequestBody RefreshTokenRequest request){
         if(!jwtService.isRefreshTokenValid(request.getRefreshToken())){
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new SessionExpiredException("Your session has expired!");
         }
         var userId = jwtService.extractClaim(request.getRefreshToken(), Claims::getId);
         var user = userService.getUserById(Long.parseLong(userId));
@@ -95,7 +97,7 @@ public class GuestController {
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user.getId());
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken));
+        return ResponseEntity.ok(new AuthenticationModel(jwtToken, refreshToken));
     }
 
     @PostMapping("/username-available")

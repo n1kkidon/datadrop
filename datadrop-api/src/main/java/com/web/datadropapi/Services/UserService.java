@@ -6,8 +6,9 @@ import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.*;
 import com.web.datadropapi.Repositories.UserRepository;
-import com.web.datadropapi.Utils.FileUploadUtils;
+import com.web.datadropapi.Utils.FileSystemUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     public final UserRepository userRepository;
     public final DirectoryRepository directoryRepository;
+    private final FileSystemUtils fileSystemUtils;
+
     public UserEntity getCurrentUser(){
         if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(x -> x.getAuthority().equals("ROLE_ANONYMOUS"))){
             throw new UserNotAuthenticatedException("no auth context");
@@ -71,10 +73,14 @@ public class UserService {
     public boolean deleteUserAccount(UserEntity user) throws IOException {
         var rootDir = directoryRepository.findByOwner_idAndParentDirectory_IdIsNull(user.getId());
         if(rootDir != null && !rootDir.isEmpty()){
-            var path = Path.of(rootDir.get(0).getAbsolutePath());
-            path = Paths.get("USER_FILES/" + user.getId(), path.toString());
-            var resource = new UrlResource(path.toUri());
-            var success = FileUploadUtils.deleteFolder(resource.getFile());
+
+            var resource = fileSystemUtils.getChildItemInSystem(rootDir.getFirst(), "");
+
+//            var path = Path.of(rootDir.getFirst().getAbsolutePath());
+//            path = Paths.get("USER_FILES/" + user.getId(), path.toString());
+//            var resource = new UrlResource(path.toUri());
+
+            var success = fileSystemUtils.deleteFolder(resource.getFile());
             if(success){
                 userRepository.delete(user);
                 return true;
@@ -93,10 +99,14 @@ public class UserService {
             return new SpaceUsageResponse(0, MAX_SPACE, MAX_SPACE);
         }
         else {
-            var path = Path.of(rootDir.getFirst().getAbsolutePath());
-            path = Paths.get("USER_FILES/" + user.getId(), path.toString());
-            var resource = new UrlResource(path.toUri());
-            var size = FileUploadUtils.getFolderSize(resource.getFile());
+
+            var resource = fileSystemUtils.getChildItemInSystem(rootDir.getFirst(), "");
+
+//            var path = Path.of(rootDir.getFirst().getAbsolutePath());
+//            path = Paths.get("USER_FILES/" + user.getId(), path.toString());
+//            var resource = new UrlResource(path.toUri());
+
+            var size = fileSystemUtils.getFolderSize(resource.getFile());
             double gbSize = (double)size/(1024*1024*1024);
             return new SpaceUsageResponse(gbSize, MAX_SPACE-gbSize, MAX_SPACE);
         }

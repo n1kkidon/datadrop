@@ -17,6 +17,7 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './app-state';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from './core/core.module';
+import { SharingModule } from './sharing/sharing.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,6 +34,7 @@ import { CoreModule } from './core/core.module';
     AdminModule,
     ComponentsModule,
     FilesModule,
+    SharingModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, {
       metaReducers,

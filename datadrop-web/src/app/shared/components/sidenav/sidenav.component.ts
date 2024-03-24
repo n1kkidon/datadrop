@@ -2,9 +2,8 @@ import { firstValueFrom } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../user/services/user.service';
 import { UserDto } from '../../models/UserDto';
-import { DirectoryService } from '../../../files/services/directory.service';
 import { Router } from '@angular/router';
-import { SpaceUsageResponse } from '../../models/SpaceUsageResponse';
+import { SpaceUsageResponse } from '../../models/response/SpaceUsageResponse';
 
 @Component({
   selector: 'app-sidenav',
@@ -12,11 +11,7 @@ import { SpaceUsageResponse } from '../../models/SpaceUsageResponse';
   styleUrls: ['./sidenav.component.scss'],
 })
 export class SidenavComponent implements OnInit {
-  constructor(
-    private userService: UserService,
-    private directoryService: DirectoryService,
-    private router: Router,
-  ) {}
+  constructor(private userService: UserService) {}
 
   usersSharingWithMe: UserDto[] = [];
   spaceUsage: SpaceUsageResponse = {
@@ -36,9 +31,5 @@ export class SidenavComponent implements OnInit {
       this.userService.getSpaceUsageStatsOfCurrentUser(),
     );
     if (usageResp.ok) this.spaceUsage = usageResp.body!;
-  }
-
-  routeTo(id: number) {
-    this.router.navigate(['/shared/' + id]);
   }
 }

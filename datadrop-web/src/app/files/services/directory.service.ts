@@ -1,4 +1,4 @@
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
 import { UtilsService } from '../../shared/services/utils.service';
 import {
   HttpClient,
@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ShareStateUpdateRequest } from '../../shared/models/ShareStateUpdateRequest';
+import { ShareStateUpdateRequest } from '../../shared/models/request/ShareStateUpdateRequest';
 import { UserDto } from '../../shared/models/UserDto';
 
 @Injectable({
@@ -21,8 +21,8 @@ export class DirectoryService {
 
   getDirectoryInfo(
     index: number,
-  ): Observable<HttpResponse<DirectoryInfo> | HttpErrorResponse> {
-    return this.httpClient.get<DirectoryInfo>('/directory/' + index + '/info', {
+  ): Observable<HttpResponse<DirectoryDto> | HttpErrorResponse> {
+    return this.httpClient.get<DirectoryDto>('/directory/' + index + '/info', {
       observe: 'response',
       responseType: 'json',
     });
@@ -34,7 +34,7 @@ export class DirectoryService {
     sharedState?: string,
     sharedWithUsers?: number[],
   ) {
-    return this.httpClient.post<DirectoryInfo>(
+    return this.httpClient.post<DirectoryDto>(
       '/directory/create',
       { parentDirectoryId, name, sharedState, sharedWithUsers },
       { observe: 'response', responseType: 'json' },
@@ -42,7 +42,7 @@ export class DirectoryService {
   }
 
   renameDirectory(itemId: number, newName: string) {
-    return this.httpClient.patch<DirectoryInfo>(
+    return this.httpClient.patch<DirectoryDto>(
       '/directory/rename',
       { itemId, newName },
       { observe: 'response', responseType: 'json' },

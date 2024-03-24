@@ -1,14 +1,14 @@
 import { DirectoryService } from '../../services/directory.service';
 import { Component, OnInit } from '@angular/core';
 import { FileService } from '../../services/file.service';
-import { DirectoryInfo } from '../../../shared/models/DirectoryInfo';
-import { FileInfo } from '../../../shared/models/FileInfo';
+import { DirectoryDto } from '../../../shared/models/DirectoryDto';
+import { FileDto } from '../../../shared/models/FileDto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { FilepageComponent } from '../../components/filepage/filepage.component';
-import { EditFormDialogComponent } from '../../components/editform-dialog/editform-dialog.component';
+import { FilePageComponent } from '../../components/file-page/file-page.component';
+import { EditFormDialogComponent } from '../../components/edit-form-dialog/edit-form-dialog.component';
 import { UtilsService } from '../../../shared/services/utils.service';
-import { FileuploadDialogComponent } from '../../components/fileupload-dialog/fileupload-dialog.component';
+import { FileUploadDialogComponent } from '../../components/file-upload-dialog/file-upload-dialog.component';
 import { AdminService } from '../../../admin/services/admin.service';
 import { UserService } from '../../../user/services/user.service';
 
@@ -31,7 +31,7 @@ export class FilesListComponent implements OnInit {
 
   id?: number;
 
-  currentDir: DirectoryInfo = {
+  currentDir: DirectoryDto = {
     subdirectories: [],
     files: [],
     id: 0,
@@ -118,42 +118,42 @@ export class FilesListComponent implements OnInit {
       });
   }
 
-  openFileInfoDialog(selectedFile: FileInfo | DirectoryInfo) {
-    this.dialog.open(FilepageComponent, {
+  openFileInfoDialog(selectedFile: FileDto | DirectoryDto) {
+    this.dialog.open(FilePageComponent, {
       data: selectedFile,
       disableClose: false,
-      panelClass: 'filepage-dialog',
+      panelClass: 'file-page-dialog',
     });
   }
 
   openFileUploadDialog() {
-    const uploadDialog = this.dialog.open(FileuploadDialogComponent, {
+    const uploadDialog = this.dialog.open(FileUploadDialogComponent, {
       data: this.currentDir,
       disableClose: false,
-      panelClass: 'fileupload-dialog',
+      panelClass: 'file-upload-dialog',
     });
-    uploadDialog.afterClosed().subscribe((data: FileInfo) => {
+    uploadDialog.afterClosed().subscribe((data: FileDto) => {
       console.log(data.parentDirectoryId + '==' + this.currentDir.id);
       if (!data || data.parentDirectoryId != this.currentDir.id) return;
       this.getCurrentFolder(this.currentDir.id);
     });
   }
 
-  openEditFormDialog(selectedDir?: DirectoryInfo | FileInfo) {
+  openEditFormDialog(selectedDir?: DirectoryDto | FileDto) {
     const fileDialog = this.dialog.open(EditFormDialogComponent, {
       data: selectedDir
         ? { dir: this.currentDir, editing: selectedDir }
         : { dir: this.currentDir, editing: undefined },
       disableClose: false,
-      panelClass: 'editform-dialog',
+      panelClass: 'edit-form-dialog',
     });
-    fileDialog.afterClosed().subscribe((data: DirectoryInfo | FileInfo) => {
+    fileDialog.afterClosed().subscribe((data: DirectoryDto | FileDto) => {
       if (!data) return;
       this.getCurrentFolder(this.currentDir.id);
     });
   }
 
-  deleteFile(file: FileInfo | DirectoryInfo) {
+  deleteFile(file: FileDto | DirectoryDto) {
     this.utilsService
       .openConfirmActionDialog(
         'Are you sure you want to delete "' + file.name + '" ?',
@@ -161,7 +161,7 @@ export class FilesListComponent implements OnInit {
       .afterClosed()
       .subscribe((confirmed: boolean) => {
         if (confirmed) {
-          if ((file as FileInfo).mimeType) {
+          if ((file as FileDto).mimeType) {
             this.fileService
               .deleteFileById(file.id)
               .subscribe((resp) => this.deletionResponse(file.name, resp.ok));
@@ -183,7 +183,7 @@ export class FilesListComponent implements OnInit {
     }
   }
 
-  doubleClickFileDialog(file: FileInfo) {
+  doubleClickFileDialog(file: FileDto) {
     this.utilsService.doubleClick(() => this.openFileInfoDialog(file));
   }
 

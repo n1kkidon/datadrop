@@ -1,14 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { AdminService } from '../../services/admin.service';
 import { UserDto } from '../../../shared/models/UserDto';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { UtilsService } from '../../../shared/services/utils.service';
 import { Router } from '@angular/router';
 import { AppState } from '../../../app-state';
 import { Store } from '@ngrx/store';
 import { selectUserList } from '../../reducers/admin.reducer';
-import { filter, map, takeUntil } from 'rxjs';
+import { filter, map } from 'rxjs';
 import * as AdminActions from '../../actions/admin.actions';
 import { openConfirmDialog } from '../../../core/actions/core.actions';
 

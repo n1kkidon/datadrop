@@ -6,13 +6,13 @@ import {
   on,
 } from '@ngrx/store';
 import * as AdminActions from '../actions/admin.actions';
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
 
 export const adminFeatureKey = 'admin';
 
 export interface AdminState {
   usersList: UserDto[];
-  userRootDirectory: DirectoryInfo | null;
+  userRootDirectory: DirectoryDto | null;
 }
 
 export const initialState: AdminState = {

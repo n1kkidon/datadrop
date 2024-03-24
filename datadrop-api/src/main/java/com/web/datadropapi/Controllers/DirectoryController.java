@@ -14,7 +14,7 @@ import com.web.datadropapi.Repositories.SharedDirectoryRepository;
 import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.DirectoryService;
 import com.web.datadropapi.Services.UserService;
-import com.web.datadropapi.Utils.FileUploadUtils;
+import com.web.datadropapi.Utils.FileSystemUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,9 @@ public class DirectoryController {
     @Autowired
     private DirectoryService directoryService;
 
+    @Autowired
+    private FileSystemUtils fileSystemUtils;
+
     @PostMapping("/create")
     public ResponseEntity<DirectoryDto> createDirectory(@RequestBody DirectoryDto request) throws IOException {
         var user = userService.getCurrentUser();
@@ -76,7 +79,7 @@ public class DirectoryController {
             directoryService.setSharedWithByIds(directory, request.getSharedWithUsers());
 
 
-        FileUploadUtils.createFolderIfDoesntExist(entity);
+        fileSystemUtils.createFolderIfDoesntExist(entity);
         return new ResponseEntity<>(fileMapperService.mapDirectoryEntityToDto(entity), HttpStatus.OK);
     }
     @PatchMapping("/rename")

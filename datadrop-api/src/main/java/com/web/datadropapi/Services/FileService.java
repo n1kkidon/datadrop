@@ -10,6 +10,7 @@ import com.web.datadropapi.Repositories.Entities.SharedDirectoryEntity;
 import com.web.datadropapi.Repositories.Entities.SharedFileEntity;
 import com.web.datadropapi.Repositories.FileRepository;
 import com.web.datadropapi.Repositories.SharedFileRepository;
+import com.web.datadropapi.Utils.FileSystemUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class FileService {
     public final UserService userService;
     public final FileMapperService fileMapperService;
     public final SharedFileRepository sharedFileRepository;
+    public final FileSystemUtils fileSystemUtils;
 
     public FileEntity getFileById(Long id){
         var opt = fileRepository.findById(id);
@@ -61,7 +63,7 @@ public class FileService {
         if(file.getName().equals(newName))
             return file;
 
-        var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
+        var resource = fileSystemUtils.getChildItemInSystem(file.getParentDirectory(), file.getName());
         if(resource.exists() && resource.isReadable())
         {
             if(file.getParentDirectory().containsItem(newName)){
@@ -79,7 +81,7 @@ public class FileService {
     }
 
     public void deleteFile(FileEntity file) throws IOException {
-        var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
+        var resource = fileSystemUtils.getChildItemInSystem(file.getParentDirectory(), file.getName());
         if(!file.getParentDirectory().getOwner().getId().equals(userService.getCurrentUser().getId())
                 && !userService.getCurrentUser().getRole().equals(UserRole.ROLE_ADMIN)) {
             //can delete files if you own them, or you are admin
@@ -95,7 +97,7 @@ public class FileService {
     }
 
     public Resource getFile(FileEntity file) throws MalformedURLException {
-        var resource = file.getParentDirectory().getChildItemInSystem(file.getName());
+        var resource = fileSystemUtils.getChildItemInSystem(file.getParentDirectory(), file.getName());
         if(resource.exists()){
             if(resource.isReadable()){
                 return resource;

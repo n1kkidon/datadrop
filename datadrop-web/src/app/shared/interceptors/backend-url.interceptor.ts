@@ -1,5 +1,4 @@
 import {
-  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpHeaders,
@@ -8,30 +7,24 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  Observable,
   catchError,
-  mergeMap,
-  retry,
+  filter,
+  Observable,
   switchMap,
+  take,
   throwError,
-  timer,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ErrorResponse } from '../models/ErrorResponse';
-import { UtilsService } from '../services/utils.service';
-import { Token } from '../models/Token';
-import { jwtDecode } from 'jwt-decode';
-import { NgxPermissionsService } from 'ngx-permissions';
-import { Router } from '@angular/router';
-import { ErrorModel } from '../models/ErrorModel';
+import { AppState } from '../../app-state';
+import { Store } from '@ngrx/store';
+import * as UserActions from '../../user/actions/user.actions';
+import * as CoreActions from '../../core/actions/core.actions';
+import { selectUserAuth } from '../../user/reducers/user.reducer';
 
 @Injectable()
 export class BackEndUrlInterceptor implements HttpInterceptor {
-  constructor(
-    private utilsService: UtilsService,
-    private permissionsService: NgxPermissionsService,
-    private router: Router,
-  ) {}
+  constructor(private store: Store<AppState>) {}
   headers?: HttpHeaders;
   intercept(
     request: HttpRequest<any>,
@@ -42,73 +35,73 @@ export class BackEndUrlInterceptor implements HttpInterceptor {
     return next.handle(cloneRequest).pipe(
       catchError((error: any) => {
         let errorBody: ErrorResponse = error.error;
-        if (errorBody.path == null) {
-          let error1 = errorBody as unknown as ErrorModel;
-          this.utilsService.openSnackBar(error1.message, 'Close');
-          return throwError(() => error);
-        }
-        if (errorBody == null || errorBody == undefined) {
-          this.utilsService.openSnackBar(error.message, 'Close');
-          return throwError(() => error);
-        }
+
         if (errorBody.error === 'Invalid token') {
           if (!localStorage.getItem('rtoken')) {
-            this.router.navigate(['/login']);
+            this.store.dispatch(UserActions.logout());
             return throwError(() => error);
           }
-          return this.utilsService.reLogin().pipe(
-            switchMap((resp) => {
-              console.log(resp);
+          this.store.dispatch(UserActions.reLogin());
 
-              if (resp.ok) {
-                localStorage.setItem('token', resp.body!.token);
-                localStorage.setItem('rtoken', resp.body!.refreshToken);
-                let token: Token = jwtDecode(resp.body!.token);
-                this.permissionsService.loadPermissions([
-                  token.roles[0].authority,
-                ]);
-              } else {
-                localStorage.removeItem('token');
-                localStorage.removeItem('rtoken');
-                this.router.navigate(['/login']);
-              }
-              return next.handle(this.addJwtToHeader(cloneRequest));
+          return this.store.select(selectUserAuth).pipe(
+            filter(
+              (x) =>
+                x !== null &&
+                !cloneRequest.headers.get('Authorization')!.includes(x.token),
+            ),
+            take(1),
+            switchMap((auth) => {
+              return next.handle(
+                this.addJwtToHeader(cloneRequest, auth!.token),
+              );
             }),
           );
+        } else if (errorBody.error === 'Your session has expired!') {
+          this.store.dispatch(UserActions.logout());
+          this.store.dispatch(
+            CoreActions.showSnackbar({
+              message: errorBody.error,
+              action: 'Close',
+            }),
+          );
+          return throwError(() => error);
         } else {
-          this.utilsService.openSnackBar(errorBody.error, 'Close');
+          this.store.dispatch(
+            CoreActions.showSnackbar({
+              message: errorBody.error,
+              action: 'Close',
+            }),
+          );
           return throwError(() => error);
         }
       }),
     );
   }
 
-  addJwtToHeader(request: HttpRequest<any>) {
-    const jwtToken = localStorage.getItem('token');
-    if (jwtToken == null || !jwtToken) {
-      this.router.navigate(['/login']);
+  addJwtToHeader(request: HttpRequest<any>, jwtToken: string | null) {
+    if (jwtToken === null || !jwtToken) {
+      this.store.dispatch(UserActions.logout());
     }
-
     this.headers = new HttpHeaders({
       Authorization: `Bearer ${jwtToken}`,
     });
-    const cloneRequest = request.clone({
+
+    return request.clone({
       headers: this.headers,
     });
-    return cloneRequest;
   }
 
   injectJwtToRequest(request: HttpRequest<any>) {
     if (!request.url.startsWith('/guest')) {
-      return this.addJwtToHeader(request).clone({
+      const jwtToken = localStorage.getItem('token');
+      return this.addJwtToHeader(request, jwtToken).clone({
         headers: this.headers,
         url: environment.backendUrl + request.url,
       });
     } else {
-      const cloneRequest = request.clone({
+      return request.clone({
         url: environment.backendUrl + request.url,
       });
-      return cloneRequest;
     }
   }
 }

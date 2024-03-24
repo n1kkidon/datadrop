@@ -6,7 +6,7 @@
       <div
         class="sidenav-entry"
         *ngFor="let user of usersSharingWithMe"
-        (click)="routeTo(user.id)"
+        [routerLink]="['/shared/', user.id]"
       >
         <mat-icon>group</mat-icon>
         <a class="entry-name">{{ user.name }}</a>

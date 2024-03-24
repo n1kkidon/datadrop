@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
-import { UtilsService } from '../../shared/services/utils.service';
+import { HttpClient } from '@angular/common/http';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
 import { NgxPermissionsService } from 'ngx-permissions';
-import { FileInfo } from '../../shared/models/FileInfo';
+import { FileDto } from '../../shared/models/FileDto';
 import { UserDto } from '../../shared/models/UserDto';
-import { AccountUpdateResponse } from '../../shared/models/AccountUpdateResponse';
-import { AccountUpdateRequest } from '../../shared/models/AccountUpdateRequest';
-import { SpaceUsageResponse } from '../../shared/models/SpaceUsageResponse';
+import { AccountUpdateResponse } from '../../shared/models/response/AccountUpdateResponse';
+import { AccountUpdateRequest } from '../../shared/models/request/AccountUpdateRequest';
+import { SpaceUsageResponse } from '../../shared/models/response/SpaceUsageResponse';
+import { Token } from '../../shared/models/Token';
+import { jwtDecode } from 'jwt-decode';
+import { AuthenticationModel } from '../../shared/models/AuthenticationModel';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +17,6 @@ import { SpaceUsageResponse } from '../../shared/models/SpaceUsageResponse';
 export class UserService {
   constructor(
     private httpClient: HttpClient,
-    private utilsService: UtilsService,
     private permissionsService: NgxPermissionsService,
   ) {}
 
@@ -30,12 +27,20 @@ export class UserService {
     this.permissionsService.loadPermissions(['GUEST']);
   }
 
+  userLoggedIn(auth: AuthenticationModel) {
+    localStorage.setItem('token', auth.token);
+    localStorage.setItem('rtoken', auth.refreshToken);
+    let token: Token = jwtDecode(auth.token);
+    this.permissionsService.loadPermissions([token.roles[0].authority]);
+  }
+
   getUserById(id: number) {
     return this.httpClient.get<UserDto>('/user/' + id, {
       observe: 'response',
       responseType: 'json',
     });
   }
+
   getUserByName(name: string) {
     return this.httpClient.get<UserDto>('/user/name/' + name, {
       observe: 'response',
@@ -44,14 +49,14 @@ export class UserService {
   }
 
   getFilesSharedWithCurrentUser(sharingUserId: number) {
-    return this.httpClient.get<FileInfo[]>(
+    return this.httpClient.get<FileDto[]>(
       '/user/shared/files/' + sharingUserId,
       { observe: 'response', responseType: 'json' },
     );
   }
 
   getDirectoriesSharedWithCurrentUser(sharingUserId: number) {
-    return this.httpClient.get<DirectoryInfo[]>(
+    return this.httpClient.get<DirectoryDto[]>(
       '/user/shared/directories/' + sharingUserId,
       { observe: 'response', responseType: 'json' },
     );

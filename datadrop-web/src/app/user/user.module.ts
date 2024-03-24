@@ -8,6 +8,10 @@ import { LoginFormComponent } from './containers/login-form/login-form.component
 import { MaterialModule } from '../shared/modules/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './effects/user.effects';
+import { StoreModule } from '@ngrx/store';
+import * as fromUser from '../user/reducers/user.reducer';
 
 @NgModule({
   declarations: [UserComponent, RegisterFormComponent, LoginFormComponent],
@@ -18,6 +22,8 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     FormsModule,
     ReactiveFormsModule,
     NgxPermissionsModule,
+    EffectsModule.forFeature([UserEffects]),
+    StoreModule.forFeature(fromUser.userFeatureKey, fromUser.reducer),
   ],
 })
 export class UserModule {}

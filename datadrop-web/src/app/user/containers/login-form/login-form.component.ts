@@ -1,17 +1,10 @@
-import { LoginResponse } from '../../../shared/models/LoginResponse';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { GuestService } from '../../services/guest.service';
-import { Token } from '../../../shared/models/Token';
-import { jwtDecode } from 'jwt-decode';
-import { RefreshToken } from '../../../shared/models/RefreshToken';
-import { NgxPermissionsService } from 'ngx-permissions';
 import { Router } from '@angular/router';
-import { ErrorResponse } from '../../../shared/models/ErrorResponse';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UtilsService } from '../../../shared/services/utils.service';
+import { AppState } from '../../../app-state';
+import { Store } from '@ngrx/store';
+import * as UserActions from '../../actions/user.actions';
+import { selectUserAuth } from '../../reducers/user.reducer';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-login-form',
@@ -20,23 +13,22 @@ import { UtilsService } from '../../../shared/services/utils.service';
 })
 export class LoginFormComponent {
   constructor(
-    private guestService: GuestService,
-    private permissionsService: NgxPermissionsService,
+    private store: Store<AppState>,
     private router: Router,
   ) {}
 
   hide = true;
 
   onSubmit(username: string, pass: string) {
-    this.guestService.login(username, pass).subscribe((resp) => {
-      if (resp.ok) {
-        localStorage.setItem('token', resp.body!.token);
-        localStorage.setItem('rtoken', resp.body!.refreshToken);
-        let token: Token = jwtDecode(resp.body!.token);
-        this.permissionsService.loadPermissions([token.roles[0].authority]);
-        console.log(this.permissionsService.getPermissions());
-        this.router.navigate(['/home']);
-      }
-    });
+    this.store.dispatch(
+      UserActions.login({ credentials: { username, password: pass } }),
+    );
+    this.store
+      .select(selectUserAuth)
+      .pipe(
+        filter((x) => x !== null),
+        take(1),
+      )
+      .subscribe(() => this.router.navigate(['/home']));
   }
 }

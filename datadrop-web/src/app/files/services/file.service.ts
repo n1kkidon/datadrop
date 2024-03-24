@@ -6,11 +6,11 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subscription, catchError, finalize, map } from 'rxjs';
-import { DirectoryInfo } from '../../shared/models/DirectoryInfo';
-import { FileInfo } from '../../shared/models/FileInfo';
+import { DirectoryDto } from '../../shared/models/DirectoryDto';
+import { FileDto } from '../../shared/models/FileDto';
 import { UtilsService } from '../../shared/services/utils.service';
 import { saveAs } from 'file-saver';
-import { ShareStateUpdateRequest } from '../../shared/models/ShareStateUpdateRequest';
+import { ShareStateUpdateRequest } from '../../shared/models/request/ShareStateUpdateRequest';
 import { UserDto } from '../../shared/models/UserDto';
 
 @Injectable({
@@ -24,8 +24,8 @@ export class FileService {
 
   getFileInfo(
     index: number,
-  ): Observable<HttpResponse<FileInfo> | HttpErrorResponse> {
-    return this.httpClient.get<FileInfo>('/file/download/' + index + '/info', {
+  ): Observable<HttpResponse<FileDto> | HttpErrorResponse> {
+    return this.httpClient.get<FileDto>('/file/download/' + index + '/info', {
       observe: 'response',
       responseType: 'json',
     });
@@ -43,7 +43,7 @@ export class FileService {
     fd.append('file', file);
     fd.append('uploadDirectoryId', uploadDirectoryId + '');
     fd.append('sharedState', sharedState);
-    return this.httpClient.post<FileInfo>('/file/upload', fd, {
+    return this.httpClient.post<FileDto>('/file/upload', fd, {
       reportProgress: true,
       observe: 'events',
       responseType: 'json',
@@ -51,7 +51,7 @@ export class FileService {
   }
 
   renameFile(itemId: number, newName: string) {
-    return this.httpClient.patch<FileInfo>(
+    return this.httpClient.patch<FileDto>(
       '/file/rename',
       { itemId, newName },
       { observe: 'response', responseType: 'json' },

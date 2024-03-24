@@ -1,11 +1,7 @@
 package com.web.datadropapi.Config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.web.datadropapi.Handler.ErrorModel;
 import com.web.datadropapi.Handler.ErrorResponse;
-import com.web.datadropapi.Handler.Exception.UserNotAuthenticatedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -77,13 +74,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void setCustomResponse(@NonNull HttpServletResponse response, String message, String servletPath) throws IOException {
         response.setStatus(response.getStatus());
         response.setHeader("Content-Type", "application/json");
-        ErrorResponse errorModel = new ErrorResponse();
-        errorModel.setTimestamp(String.valueOf(new Date()));
-        errorModel.setStatus(response.getStatus());
-        errorModel.setError(message);
-        errorModel.setPath(servletPath);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(String.valueOf(new Date()));
+        errorResponse.setStatus(HttpStatus.resolve(response.getStatus()));
+        errorResponse.setError(message);
+        errorResponse.setPath(servletPath);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(errorModel));
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

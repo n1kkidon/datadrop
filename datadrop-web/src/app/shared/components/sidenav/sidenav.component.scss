@@ -2,7 +2,7 @@
 
 .sidenav {
   height: 100%;
-  width: 15%;
+  width: 20rem;
   padding-top: 5%;
   background-color: f.color(bg-color);
   display: flex;
@@ -15,15 +15,9 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 767px) {
-  .sidenav {
-    width: 80%;
-  }
-}
-
 .progress-bar-space-usage {
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 3rem;
+  margin-right: 3rem;
   margin-top: auto;
 }
 
@@ -46,9 +40,11 @@
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
 .entry-name {
   margin-left: 5px;
 }
+
 .sidenav-entry:hover {
   background-color: f.color(hover-color);
 }

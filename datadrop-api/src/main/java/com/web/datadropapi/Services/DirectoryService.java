@@ -7,12 +7,16 @@ import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.Entities.SharedDirectoryEntity;
 import com.web.datadropapi.Repositories.SharedDirectoryRepository;
-import com.web.datadropapi.Utils.FileUploadUtils;
+import com.web.datadropapi.Utils.FileSystemUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,6 +28,7 @@ public class DirectoryService {
     public final DirectoryRepository directoryRepository;
     public final UserService userService;
     public final SharedDirectoryRepository sharedDirectoryRepository;
+    private final FileSystemUtils fileSystemUtils;
 
     public DirectoryEntity getDirectoryById(Long id){
         var directory = directoryRepository.findById(id);
@@ -34,7 +39,7 @@ public class DirectoryService {
 
     public DirectoryEntity renameDirectory(DirectoryEntity dir, String newName) throws IOException {
         var directory = dir.getParentDirectory();
-        var resource = directory.getChildItemInSystem(dir.getName());
+        var resource = fileSystemUtils.getChildItemInSystem(directory, dir.getName());
         if(dir.getName().equals(newName))
             return directory;
 
@@ -55,10 +60,10 @@ public class DirectoryService {
     }
 
     public void deleteDirectory(DirectoryEntity directory) throws IOException {
-        var resource = directory.getParentDirectory().getChildItemInSystem(directory.getName());
+        var resource = fileSystemUtils.getChildItemInSystem(directory.getParentDirectory(), directory.getName());
         if(resource.exists()){
             System.out.println(resource.getFile().isDirectory());
-            if(resource.getFile().isDirectory() && FileUploadUtils.deleteFolder(resource.getFile())){
+            if(resource.getFile().isDirectory() && fileSystemUtils.deleteFolder(resource.getFile())){
                 directoryRepository.delete(directory);
                 return; //new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -115,7 +120,4 @@ public class DirectoryService {
             }
         }
     }
-
-
-
 }

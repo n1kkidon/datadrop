@@ -16,17 +16,17 @@ import {
   retry,
   switchMap,
 } from 'rxjs';
-import { LoginResponse } from '../models/LoginResponse';
+import { AuthenticationModel } from '../models/AuthenticationModel';
 import { Token } from '../models/Token';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { DirectoryInfo } from '../models/DirectoryInfo';
+import { DirectoryDto } from '../models/DirectoryDto';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { GuestService } from '../../user/services/guest.service';
-import { FileInfo } from '../models/FileInfo';
+import { FileDto } from '../models/FileDto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,18 +41,18 @@ export class UtilsService {
     private guestService: GuestService,
   ) {}
 
-  public directoryChange: EventEmitter<DirectoryInfo> = new EventEmitter();
+  public directoryChange: EventEmitter<DirectoryDto> = new EventEmitter();
   public fileDownloading: EventEmitter<number> = new EventEmitter();
-  public uploadFinished: EventEmitter<FileInfo> = new EventEmitter();
+  public uploadFinished: EventEmitter<FileDto> = new EventEmitter();
 
-  public openSnackBar(message: string, action: string) {
+  public openSnackBar(message: string, action?: string) {
     this.snackbar.open(message, action, {
       duration: 4000,
     });
   }
-  reLogin(): Observable<HttpResponse<LoginResponse> | HttpErrorResponse> {
+  reLogin() {
     let refreshToken = localStorage.getItem('rtoken');
-    return this.httpClient.post<LoginResponse>(
+    return this.httpClient.post<AuthenticationModel>(
       '/guest/re-login',
       { refreshToken },
       { observe: 'response', responseType: 'json' },

@@ -63,11 +63,6 @@ public class DirectoryEntity {
             return "/";
         else return parentDirectory.getAbsolutePath() + name + "/";
     }
-    public Resource getChildItemInSystem(String name) throws MalformedURLException {
-        var path = Path.of(getAbsolutePath()).resolve(name);
-        path = Paths.get("USER_FILES/" + owner.getId(), path.toString());
-        return new UrlResource(path.toUri());
-    }
 
     //Not case-sensitive
     public boolean containsItem(String name){
