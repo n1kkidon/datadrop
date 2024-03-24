@@ -2,20 +2,16 @@ package com.web.datadropapi.Services;
 
 import com.web.datadropapi.Enums.SharedState;
 import com.web.datadropapi.Handler.Exception.UserNotAuthenticatedException;
-import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
+import com.web.datadropapi.Models.SpaceUsageModel;
 import com.web.datadropapi.Repositories.DirectoryRepository;
 import com.web.datadropapi.Repositories.Entities.*;
 import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Utils.FileSystemUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -91,12 +87,12 @@ public class UserService {
         return true;
     }
 
-    public SpaceUsageResponse getStorageUsageOfUser(UserEntity user) throws IOException {
+    public SpaceUsageModel getStorageUsageOfUser(UserEntity user) throws IOException {
         double MAX_SPACE = 20;
 
         var rootDir = directoryRepository.findByOwner_idAndParentDirectory_IdIsNull(user.getId());
         if(rootDir == null || rootDir.isEmpty()){
-            return new SpaceUsageResponse(0, MAX_SPACE, MAX_SPACE);
+            return new SpaceUsageModel(0, MAX_SPACE, MAX_SPACE);
         }
         else {
 
@@ -108,7 +104,7 @@ public class UserService {
 
             var size = fileSystemUtils.getFolderSize(resource.getFile());
             double gbSize = (double)size/(1024*1024*1024);
-            return new SpaceUsageResponse(gbSize, MAX_SPACE-gbSize, MAX_SPACE);
+            return new SpaceUsageModel(gbSize, MAX_SPACE-gbSize, MAX_SPACE);
         }
     }
 

@@ -7,7 +7,7 @@ import com.web.datadropapi.Models.DirectoryDto;
 import com.web.datadropapi.Models.FileDto;
 import com.web.datadropapi.Models.Requests.AccountUpdateRequest;
 import com.web.datadropapi.Models.Responses.AccountUpdateResponse;
-import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
+import com.web.datadropapi.Models.SpaceUsageModel;
 import com.web.datadropapi.Models.UserDto;
 import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.UserService;
@@ -107,7 +107,7 @@ public class UserController {
 
 
     @GetMapping("/storage")
-    public ResponseEntity<SpaceUsageResponse> getSpaceUsageStatsOfCurrentUser() throws IOException {
+    public ResponseEntity<SpaceUsageModel> getSpaceUsageStatsOfCurrentUser() throws IOException {
         var user = userService.getCurrentUser();
         return new ResponseEntity<>(userService.getStorageUsageOfUser(user), HttpStatus.OK);
     }

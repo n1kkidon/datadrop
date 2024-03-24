@@ -1,5 +1,5 @@
 {
-  "name": "homepage",
+  "name": "datadrop-web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -22,6 +22,7 @@
     "@angular/router": "^17.2.3",
     "@ngrx/effects": "^17.1.1",
     "@ngrx/store": "^17.1.1",
+    "@ngrx/store-devtools": "^17.1.1",
     "file-saver": "^2.0.5",
     "file-type": "^18.7.0",
     "filesaver": "^0.0.13",

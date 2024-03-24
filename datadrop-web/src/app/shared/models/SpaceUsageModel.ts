@@ -1,4 +1,4 @@
-export interface SpaceUsageResponse {
+export interface SpaceUsageModel {
   spaceUsedGb: number;
   spaceAvailableGb: number;
   totalSpaceGb: number;

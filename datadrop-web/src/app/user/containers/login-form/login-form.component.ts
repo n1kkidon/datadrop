@@ -29,6 +29,6 @@ export class LoginFormComponent {
         filter((x) => x !== null),
         take(1),
       )
-      .subscribe(() => this.router.navigate(['/home']));
+      .subscribe(() => this.router.navigate(['/storage']));
   }
 }

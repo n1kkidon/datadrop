@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserDto } from '../../shared/models/UserDto';
-import { SpaceUsageResponse } from '../../shared/models/response/SpaceUsageResponse';
+import { SpaceUsageModel } from '../../shared/models/SpaceUsageModel';
 import { DirectoryDto } from '../../shared/models/DirectoryDto';
 import { FileDto } from '../../shared/models/FileDto';
 

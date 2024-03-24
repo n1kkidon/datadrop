@@ -6,7 +6,7 @@ import { FileDto } from '../../shared/models/FileDto';
 import { UserDto } from '../../shared/models/UserDto';
 import { AccountUpdateResponse } from '../../shared/models/response/AccountUpdateResponse';
 import { AccountUpdateRequest } from '../../shared/models/request/AccountUpdateRequest';
-import { SpaceUsageResponse } from '../../shared/models/response/SpaceUsageResponse';
+import { SpaceUsageModel } from '../../shared/models/SpaceUsageModel';
 import { Token } from '../../shared/models/Token';
 import { jwtDecode } from 'jwt-decode';
 import { AuthenticationModel } from '../../shared/models/AuthenticationModel';
@@ -78,7 +78,7 @@ export class UserService {
   }
 
   getSpaceUsageStatsOfCurrentUser() {
-    return this.httpClient.get<SpaceUsageResponse>('/user/storage', {
+    return this.httpClient.get<SpaceUsageModel>('/user/storage', {
       observe: 'response',
       responseType: 'json',
     });

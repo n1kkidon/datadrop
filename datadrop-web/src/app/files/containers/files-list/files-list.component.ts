@@ -198,7 +198,7 @@ export class FilesListComponent implements OnInit {
       );
     else
       this.utilsService.doubleClick(() =>
-        this.router.navigate(['/home/' + id]),
+        this.router.navigate(['/storage/' + id]),
       );
   }
 }

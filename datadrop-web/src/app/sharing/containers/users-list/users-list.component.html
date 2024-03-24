@@ -1,3 +1,3 @@
 @for (user of userList$ | async; track $index) {
-  <div>{{ user.name }}</div>
+  <div [routerLink]="['/shared/', user.id]">{{ user.name }}</div>
 }

@@ -9,22 +9,6 @@
     </button>
     <span>{{ currDirectoryName }}</span>
   </div>
-  <div class="right-side">
-    <button
-      *ngxPermissionsOnly="['ROLE_ADMIN']"
-      matTooltip="all users table"
-      mat-icon-button
-      routerLink="/users"
-    >
-      <mat-icon>people</mat-icon>
-    </button>
-    <button mat-icon-button matTooltip="My root directory" routerLink="/home">
-      <mat-icon>storage</mat-icon>
-    </button>
-    <button mat-icon-button matTooltip="Login page" (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon>
-    </button>
-  </div>
 </mat-toolbar>
 <mat-progress-bar
   mode="determinate"

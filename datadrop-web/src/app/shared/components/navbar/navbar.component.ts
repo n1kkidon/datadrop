@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FilesListComponent } from '../../../files/containers/files-list/files-list.component';
 import { Router } from '@angular/router';
 import { UserService } from '../../../user/services/user.service';
 import { UtilsService } from '../../services/utils.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import * as UserActions from '../../../user/actions/user.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../app-state';
 
 @Component({
   selector: 'app-navbar',
@@ -12,8 +14,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class NavbarComponent implements OnInit {
   constructor(
-    private userService: UserService,
-    private router: Router,
+    private store: Store<AppState>,
     private utilsService: UtilsService,
   ) {}
 
@@ -21,9 +22,10 @@ export class NavbarComponent implements OnInit {
 
   uploading = false;
   currUploadProgress = 0;
-  currDirectoryName = 'Home';
+  currDirectoryName = 'My Storage';
 
   ngOnInit(): void {
+    this.drawer.opened = true;
     this.utilsService.fileDownloading.subscribe((progress) => {
       this.uploading = true;
       this.currUploadProgress = progress;
@@ -31,12 +33,7 @@ export class NavbarComponent implements OnInit {
     });
 
     this.utilsService.directoryChange.subscribe(
-      (dir) => (this.currDirectoryName = dir.name ? dir.name : 'Home'),
+      (dir) => (this.currDirectoryName = dir.name ? dir.name : 'My Storage'),
     );
-  }
-
-  logout() {
-    this.userService.logout();
-    this.router.navigate(['/login']);
   }
 }

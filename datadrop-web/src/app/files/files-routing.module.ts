@@ -5,7 +5,7 @@ import { NgxPermissionsGuard } from 'ngx-permissions';
 
 const routes: Routes = [
   {
-    path: 'home',
+    path: 'storage',
     component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'home/:id',
+    path: 'storage/:id',
     component: FilesListComponent,
     canActivate: [NgxPermissionsGuard],
     data: {

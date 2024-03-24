@@ -6,6 +6,7 @@ import * as UserActions from '../actions/user.actions';
 import { map, of, switchMap, tap } from 'rxjs';
 import { UtilsService } from '../../shared/services/utils.service';
 import { GuestService } from '../services/guest.service';
+import { loadSpaceUsageStats } from '../actions/user.actions';
 
 @Injectable()
 export class UserEffects {
@@ -47,8 +48,11 @@ export class UserEffects {
       ofType(UserActions.login),
       switchMap((action) => {
         return this.guestService.login(action.credentials).pipe(
-          map((response) => {
-            return UserActions.userLoggedIn({ auth: response.body! });
+          switchMap((response) => {
+            return [
+              UserActions.userLoggedIn({ auth: response.body! }),
+              UserActions.loadSpaceUsageStats()
+            ];
           }),
         );
       }),
@@ -62,5 +66,20 @@ export class UserEffects {
         tap((action) => this.userService.userLoggedIn(action.auth)),
       ),
     { dispatch: false },
+  );
+
+  loadSpaceUsageStats$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.loadSpaceUsageStats),
+      switchMap((action) =>
+        this.userService
+          .getSpaceUsageStatsOfCurrentUser()
+          .pipe(
+            map((response) =>
+              UserActions.spaceUsageStatsLoaded({ data: response.body! }),
+            ),
+          ),
+      ),
+    ),
   );
 }

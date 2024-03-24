@@ -1,28 +1,69 @@
 <mat-drawer-container class="sidenav-container" autosize>
   <mat-drawer #drawer class="sidenav" mode="side">
-    <div class="sidenav-inner">
-      <p class="sidenav-title">These users have shared files with you:</p>
-
+    <div class="sidenav-navigation">
       <div
         class="sidenav-entry"
-        *ngFor="let user of usersSharingWithMe"
-        [routerLink]="['/shared/', user.id]"
+        matTooltip="Root directory"
+        matTooltipPosition="right"
+        [routerLink]="['/storage']"
+      >
+        <mat-icon>storage</mat-icon>
+        <a class="entry-name">My Storage</a>
+      </div>
+      <div
+        class="sidenav-entry"
+        matTooltip="Items shared with me by other users"
+        matTooltipPosition="right"
+        [routerLink]="['/shared']"
+      >
+        <mat-icon>cast</mat-icon>
+        <a class="entry-name">Shared</a>
+      </div>
+      <div
+        class="sidenav-entry"
+        matTooltip="Table of app users"
+        matTooltipPosition="right"
+        *ngxPermissionsOnly="['ROLE_ADMIN']"
+        [routerLink]="['/users']"
       >
         <mat-icon>group</mat-icon>
-        <a class="entry-name">{{ user.name }}</a>
+        <a class="entry-name">Users</a>
+      </div>
+    </div>
+
+    <div class="sidenav-bottom">
+      <div
+        class="sidenav-entry"
+        matTooltip="User settings"
+        matTooltipPosition="right"
+        [routerLink]="['/settings']"
+      >
+        <mat-icon>settings</mat-icon>
+        <a class="entry-name">Settings</a>
+      </div>
+      <div
+        class="sidenav-entry"
+        matTooltip="Log out of your account"
+        matTooltipPosition="right"
+        (click)="onLogout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <a class="entry-name">Logout</a>
       </div>
     </div>
 
     <div class="progress-bar-space-usage">
       <p>Space Usage</p>
-      <mat-progress-bar
-        matTooltip="space usage: {{ spaceUsage.spaceUsedGb.toPrecision(2) }}/{{
-          spaceUsage.totalSpaceGb.toPrecision(2)
-        }} GB"
-        mode="determinate"
-        value="{{ (spaceUsage.spaceUsedGb / spaceUsage.totalSpaceGb) * 100 }}"
-      >
-      </mat-progress-bar>
+      @if(spaceUsage$ | async; as spaceUsage){
+        <mat-progress-bar
+          matTooltip="space usage: {{ spaceUsage.spaceUsedGb.toPrecision(2) }}/{{
+            spaceUsage.totalSpaceGb.toPrecision(2)
+          }} GB"
+          mode="determinate"
+          value="{{ (spaceUsage.spaceUsedGb / spaceUsage.totalSpaceGb) * 100 }}"
+        >
+        </mat-progress-bar>
+      }
     </div>
   </mat-drawer>
 

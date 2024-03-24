@@ -4,10 +4,8 @@ import com.web.datadropapi.Enums.UserState;
 import com.web.datadropapi.Mappers.FileMapperService;
 import com.web.datadropapi.Mappers.UserMapperService;
 import com.web.datadropapi.Models.DirectoryDto;
-import com.web.datadropapi.Models.FileDto;
-import com.web.datadropapi.Models.Responses.SpaceUsageResponse;
+import com.web.datadropapi.Models.SpaceUsageModel;
 import com.web.datadropapi.Models.UserDto;
-import com.web.datadropapi.Repositories.Entities.DirectoryEntity;
 import com.web.datadropapi.Repositories.UserRepository;
 import com.web.datadropapi.Services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,7 @@ public class AdminController {
     }
 
     @GetMapping("/storage/{id}") //admin
-    public ResponseEntity<SpaceUsageResponse> getSpaceUsageStatsByUserId(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<SpaceUsageModel> getSpaceUsageStatsByUserId(@PathVariable("id") Long id) throws IOException {
         var user = userService.getUserById(id);
         return new ResponseEntity<>(userService.getStorageUsageOfUser(user), HttpStatus.OK);
     }

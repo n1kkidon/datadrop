@@ -6,7 +6,7 @@ import { FilesListComponent } from './files/containers/files-list/files-list.com
 import { UsersTableComponent } from './admin/containers/users-table/users-table.component';
 import { RegisterFormComponent } from './user/containers/register-form/register-form.component';
 
-const routes: Routes = [{ path: '**', redirectTo: 'home' }];
+const routes: Routes = [{ path: '**', redirectTo: 'storage' }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
