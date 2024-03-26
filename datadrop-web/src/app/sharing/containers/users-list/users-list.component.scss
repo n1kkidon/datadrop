@@ -1,0 +1,15 @@
+@use "src/styles/global/functions" as f;
+
+.user-table {
+  margin: 1rem 3rem 1rem;
+  border: 1px solid f.color(accent-color);
+}
+
+.mat-mdc-table,
+.mat-mdc-paginator {
+  background-color: f.color(bg-color);
+}
+
+.action-buttons {
+  text-align: center;
+}

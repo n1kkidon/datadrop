@@ -1,5 +1,6 @@
 <mat-drawer-container class="sidenav-container" autosize>
   <mat-drawer #drawer class="sidenav" mode="side">
+    <img src="assets/fullLogo.svg" alt="datadrop"/>
     <div class="sidenav-navigation">
       <div
         class="sidenav-entry"
@@ -51,20 +52,18 @@
         <a class="entry-name">Logout</a>
       </div>
     </div>
-
-    <div class="progress-bar-space-usage">
-      <p>Space Usage</p>
-      @if(spaceUsage$ | async; as spaceUsage){
-        <mat-progress-bar
-          matTooltip="space usage: {{ spaceUsage.spaceUsedGb.toPrecision(2) }}/{{
-            spaceUsage.totalSpaceGb.toPrecision(2)
-          }} GB"
-          mode="determinate"
-          value="{{ (spaceUsage.spaceUsedGb / spaceUsage.totalSpaceGb) * 100 }}"
-        >
-        </mat-progress-bar>
-      }
-    </div>
+    @if (spaceUsage$ | async; as spaceUsage) {
+      <div class="progress-bar-space-usage" matTooltipPosition="above" matTooltip="space usage: {{
+              spaceUsage.spaceUsedGb.toPrecision(2)
+            }}/{{ spaceUsage.totalSpaceGb.toPrecision(2) }} GB">
+        <p>Space Usage</p>
+          <mat-progress-bar
+            mode="determinate"
+            value="{{ (spaceUsage.spaceUsedGb / spaceUsage.totalSpaceGb) * 100 }}"
+          >
+          </mat-progress-bar>
+      </div>
+    }
   </mat-drawer>
 
   <mat-drawer-content>

@@ -3,27 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginFormComponent } from './containers/login-form/login-form.component';
 import { NgxPermissionsGuard } from 'ngx-permissions';
 import { RegisterFormComponent } from './containers/register-form/register-form.component';
+import {GuestGuard} from "../core/guards/guest.guard";
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginFormComponent,
-    canActivate: [NgxPermissionsGuard],
-    data: {
-      permissions: {
-        only: 'GUEST',
-      },
-    },
+    canActivate: [GuestGuard]
   },
   {
     path: 'register',
     component: RegisterFormComponent,
-    canActivate: [NgxPermissionsGuard],
-    data: {
-      permissions: {
-        only: 'GUEST',
-      },
-    },
+    canActivate: [GuestGuard]
   },
 ];
 

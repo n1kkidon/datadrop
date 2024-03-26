@@ -24,3 +24,7 @@ export const spaceUsageStatsLoaded = createAction(
   '[User] Space Usage Stats Loaded',
   props<{ data: SpaceUsageModel }>(),
 );
+
+export const onLoad = createAction(
+  '[User] On Load'
+);

@@ -19,6 +19,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from './core/core.module';
 import { SharingModule } from './sharing/sharing.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import {MAT_TOOLTIP_DEFAULT_OPTIONS} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,7 +43,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       metaReducers,
     }),
     EffectsModule.forRoot([]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [
     {
@@ -49,6 +51,12 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       useClass: BackEndUrlInterceptor,
       multi: true,
     },
+    {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: {
+        showDelay: 500
+      }
+    }
   ],
   bootstrap: [AppComponent],
 })

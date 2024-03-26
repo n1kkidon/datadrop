@@ -1,45 +1,52 @@
-<form class="register" (ngSubmit)="onSubmit()" [formGroup]="registerForm">
-  <mat-form-field appearance="outline">
-    <mat-label>Username</mat-label>
-    <input matInput formControlName="username" type="text" />
-  </mat-form-field>
+<div class="container">
+  <div class="register-form mat-elevation-z8">
+    <h1>Register</h1>
+    <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" type="text" />
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Email</mat-label>
-    <input matInput formControlName="email" type="text" />
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="text" />
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Enter your password</mat-label>
-    <input
-      matInput
-      [type]="hide ? 'password' : 'text'"
-      formControlName="pass"
-    />
-    <button
-      type="button"
-      mat-icon-button
-      matSuffix
-      (click)="changePassVisibility()"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide"
-    >
-      <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-    </button>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          formControlName="pass"
+        />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="changePassVisibility()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline" *ngIf="hide">
-    <mat-label>Repeat password</mat-label>
-    <input matInput type="password" formControlName="repeatPass" />
-  </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="hide">
+        <mat-label>Repeat password</mat-label>
+        <input matInput type="password" formControlName="repeatPass" />
+      </mat-form-field>
 
-  <div
-    class="main-validation"
-    *ngIf="registerForm.hasError('passwordMismatch')"
-  >
-    Passwords do not match.
+      <div
+        class="main-validation"
+        *ngIf="registerForm.hasError('passwordMismatch')"
+      >
+        Passwords do not match.
+      </div>
+      <button class="margin-top margin-bottom" mat-stroked-button color="primary" type="submit" mat-button>
+        Register
+      </button>
+      <span><br>Already have an account? </span>
+      <span class="link" routerLink="/login">Login</span>
+    </form>
   </div>
-  <button mat-stroked-button color="primary" type="submit" mat-button>
-    Register
-  </button>
-</form>
+</div>

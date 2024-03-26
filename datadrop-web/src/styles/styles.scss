@@ -1,3 +1,4 @@
+@use "src/styles/global/functions" as f;
 @use "global/components";
 
 html {
@@ -68,7 +69,27 @@ body {
   }
 }
 
-.mat-drawer-inner-container {
-  display: flex;
-  flex-direction: column;
+.link {
+  color: f.color(accent-color);
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.margin-top{
+  margin-top: 1rem;
+}
+
+.margin-bottom{
+  margin-bottom: 1rem;
+}
+
+.margin-left{
+  margin-left: 1rem;
+}
+
+.margin-right{
+  margin-right: 1rem;
 }

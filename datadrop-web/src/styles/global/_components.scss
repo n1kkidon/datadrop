@@ -1,3 +1,5 @@
+@use "src/styles/global/functions" as f;
+
 .mdc-list-item__secondary-text {
   font-family: var(--mdc-list-list-item-label-text-font) !important;
   line-height: var(--mdc-list-list-item-label-text-line-height) !important;
@@ -9,4 +11,24 @@
 
 .mdc-list-item__secondary-text::before {
   display: none !important;
+}
+
+.mat-mdc-select-panel,
+.mat-mdc-option.mdc-list-item {
+  background-color: f.color(bg-color) !important;
+}
+
+.mat-mdc-option.mdc-list-item:hover {
+  background-color: f.color(hover-color) !important;
+}
+
+.mat-drawer-inner-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-mdc-tooltip .mdc-tooltip__surface{
+  background-color: f.color(bg-color) !important;
+  border: 1px solid f.color(accent-color) !important;
+  color: f.color(text-color) !important;
 }

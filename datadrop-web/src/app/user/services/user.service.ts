@@ -15,23 +15,34 @@ import { AuthenticationModel } from '../../shared/models/AuthenticationModel';
   providedIn: 'root',
 })
 export class UserService {
+  private readonly TOKEN = 'token';
+  private readonly REFRESH_TOKEN = 'rtoken';
+
   constructor(
     private httpClient: HttpClient,
     private permissionsService: NgxPermissionsService,
   ) {}
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rtoken');
+    localStorage.removeItem(this.TOKEN);
+    localStorage.removeItem(this.REFRESH_TOKEN);
     this.permissionsService.flushPermissions();
     this.permissionsService.loadPermissions(['GUEST']);
   }
 
   userLoggedIn(auth: AuthenticationModel) {
-    localStorage.setItem('token', auth.token);
-    localStorage.setItem('rtoken', auth.refreshToken);
+    localStorage.setItem(this.TOKEN, auth.token);
+    localStorage.setItem(this.REFRESH_TOKEN, auth.refreshToken);
     let token: Token = jwtDecode(auth.token);
     this.permissionsService.loadPermissions([token.roles[0].authority]);
+  }
+
+  loginFromStorage() : AuthenticationModel | null{
+    let token = localStorage.getItem(this.TOKEN);
+    let refreshToken = localStorage.getItem(this.REFRESH_TOKEN);
+    if(token && refreshToken)
+      return {token, refreshToken};
+    else return null;
   }
 
   getUserById(id: number) {

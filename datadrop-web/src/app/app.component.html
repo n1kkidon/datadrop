@@ -1,1 +1,7 @@
-<app-sidenav></app-sidenav>
+@if(isAuthenticated$ | async){
+  <app-sidenav></app-sidenav>
+}
+@else{
+  <router-outlet></router-outlet>
+}
+

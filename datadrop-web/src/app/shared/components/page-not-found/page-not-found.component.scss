@@ -1,0 +1,19 @@
+@use "src/styles/global/functions" as f;
+
+.not-found-box {
+  border: 1px solid f.color(accent-color);
+  height: 20rem;
+  width: 40rem;
+  margin: 5rem auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.four04{
+  color: f.color(accent-color);
+  font-weight: bold;
+  font-size: 2rem;
+}

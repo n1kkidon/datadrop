@@ -7,7 +7,7 @@ import {
 import { UserService } from '../services/user.service';
 import * as UserActions from '../actions/user.actions';
 import { AuthenticationModel } from '../../shared/models/AuthenticationModel';
-import {SpaceUsageModel} from "../../shared/models/SpaceUsageModel";
+import { SpaceUsageModel } from '../../shared/models/SpaceUsageModel';
 
 export const userFeatureKey = 'user';
 
@@ -18,7 +18,7 @@ export interface UserState {
 
 export const initialState: UserState = {
   auth: null,
-  spaceUsage: null
+  spaceUsage: null,
 };
 
 export const reducer = createReducer(
@@ -29,7 +29,10 @@ export const reducer = createReducer(
   })),
   on(UserActions.spaceUsageStatsLoaded, (state, action) => ({
     ...state,
-    spaceUsage: action.data
+    spaceUsage: action.data,
+  })),
+  on(UserActions.logout, (state, action) => ({
+    ...initialState
   }))
 );
 
@@ -37,4 +40,12 @@ const getState = createFeatureSelector<UserState>(userFeatureKey);
 
 export const selectUserAuth = createSelector(getState, (state) => state.auth);
 
-export const selectUserSpaceUsage = createSelector(getState, (state) => state.spaceUsage);
+export const selectUserSpaceUsage = createSelector(
+  getState,
+  (state) => state.spaceUsage,
+);
+
+export const selectIsUserAuthenticated = createSelector(
+  getState,
+  (state) => state.auth !== null,
+);

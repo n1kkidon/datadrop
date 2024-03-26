@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { UserService } from '../services/user.service';
 import * as UserActions from '../actions/user.actions';
-import { map, of, switchMap, tap } from 'rxjs';
+import {EMPTY, map, of, switchMap, tap} from 'rxjs';
 import { UtilsService } from '../../shared/services/utils.service';
 import { GuestService } from '../services/guest.service';
 import { loadSpaceUsageStats } from '../actions/user.actions';
@@ -51,7 +51,6 @@ export class UserEffects {
           switchMap((response) => {
             return [
               UserActions.userLoggedIn({ auth: response.body! }),
-              UserActions.loadSpaceUsageStats()
             ];
           }),
         );
@@ -81,5 +80,17 @@ export class UserEffects {
           ),
       ),
     ),
+  );
+
+  onLoad$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.onLoad),
+      switchMap(() => {
+        let authModel = this.userService.loginFromStorage();
+        if(authModel)
+          return [UserActions.userLoggedIn({auth: authModel})];
+        else return EMPTY;
+      })
+    )
   );
 }

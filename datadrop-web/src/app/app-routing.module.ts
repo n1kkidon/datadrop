@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginFormComponent } from './user/containers/login-form/login-form.component';
-import { NgxPermissionsGuard } from 'ngx-permissions';
-import { FilesListComponent } from './files/containers/files-list/files-list.component';
-import { UsersTableComponent } from './admin/containers/users-table/users-table.component';
-import { RegisterFormComponent } from './user/containers/register-form/register-form.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import {LandingGuard} from "./core/guards/landing.guard";
+import {AppComponent} from "./app.component";
 
-const routes: Routes = [{ path: '**', redirectTo: 'storage' }];
+const routes: Routes = [
+  {
+    path: '',
+    component: AppComponent,
+    canActivate: [LandingGuard],
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { NgxPermissionsService } from 'ngx-permissions';
-import { Token } from './shared/models/Token';
-import { jwtDecode } from 'jwt-decode';
+import {Store} from "@ngrx/store";
+import {AppState} from "./app-state";
+import {selectIsUserAuthenticated} from "./user/reducers/user.reducer";
+import {Observable} from "rxjs";
+import * as UserActions from './user/actions/user.actions';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +12,10 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AppComponent {
   title = 'DataDrop';
+  isAuthenticated$: Observable<boolean> = new Observable();
 
-  constructor(private permissionsService: NgxPermissionsService) {
-    let perms = localStorage.getItem('token');
-
-    if (!perms) {
-      this.permissionsService.loadPermissions(['GUEST']);
-    } else {
-      let token: Token = jwtDecode(perms);
-      this.permissionsService.loadPermissions([token.roles[0].authority]);
-    }
+  constructor(store: Store<AppState>) {
+    this.isAuthenticated$ = store.select(selectIsUserAuthenticated);
+    store.dispatch(UserActions.onLoad());
   }
 }

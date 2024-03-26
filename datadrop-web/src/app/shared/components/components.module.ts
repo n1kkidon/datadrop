@@ -7,9 +7,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
-  declarations: [ConfirmDialogComponent, NavbarComponent, SidenavComponent],
+  declarations: [
+    ConfirmDialogComponent,
+    NavbarComponent,
+    SidenavComponent,
+    PageNotFoundComponent,
+  ],
   imports: [
     CommonModule,
     MaterialModule,
@@ -18,6 +24,11 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     FormsModule,
     NgxPermissionsModule,
   ],
-  exports: [ConfirmDialogComponent, NavbarComponent, SidenavComponent],
+  exports: [
+    ConfirmDialogComponent,
+    NavbarComponent,
+    SidenavComponent,
+    PageNotFoundComponent,
+  ],
 })
 export class ComponentsModule {}
